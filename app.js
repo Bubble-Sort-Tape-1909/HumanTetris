@@ -7,16 +7,23 @@ let tempScale;
 let rescale = true;
 
 
-
-function setRescale() {
+//setIntervalOne to grab and update the current scale for window;
+function setRescaleOne() {
+  setInterval(() => {
+    rescale = !rescale
+    tempScale = scale;
+  }, 6000);
+}
+//setIntervalTwo get invoked to update the current scale for window constantly;
+function setRescaleTwo() {
   setInterval(() => {
     rescale = !rescale
     tempScale = scale;
   }, 6000);
 }
 
-setRescale();
-
+setRescaleOne()
+setRescaleTwo()
 
 
 //Getting acsess to camera
@@ -89,11 +96,12 @@ function drawSkeleton() {
     let rightKneeX = poses[i].pose.rightKnee.x;
     let rightKneeY = poses[i].pose.rightKnee.y;
 
+    //grabing a scale parameter to resize the objects at the screen
     scale = dist(rightHipX, rightHipY, rightKneeX, rightKneeY) / 3;
-
 
     // For every skeleton, loop through all body connections
     for (let j = 0; j < skeleton.length; j++) {
+
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
 
@@ -107,26 +115,33 @@ function drawSkeleton() {
 
 
 function drawWindowPoints() {
-  // Loop through all the poses detected
   let x = 200;
   let y = 200;
 
+  let testWindow = [
+    { x: x, y: y },
+    { x: (x + tempScale * 15), y: y },
+    { x: (x + tempScale * 15), y: (y + tempScale * 15) },
+    { x: x, y: (y + tempScale * 15) }
+  ];
+  //Loop through all the points in window
+  testWindow.forEach((point, index) => {
+    fill(0, 0, 255);
+    noStroke();
+    ellipse(point.x, point.y, 50, 50);
 
-  fill(0, 0, 255);
-  noStroke();
-  ellipse(x, y, 50, 50);
-
-
-  fill(0, 0, 255);
-  noStroke();
-  ellipse(x + tempScale * 15, y, 50, 50);
-
-  fill(0, 0, 255);
-  noStroke();
-  ellipse(x, y + tempScale * 15, 50, 50);
-
-  fill(0, 0, 255);
-  noStroke();
-  ellipse(x + tempScale * 15, y + tempScale * 15, 50, 50);
+    //drowing the lines between points:
+    // if we haven't reach the laat point keep drowing
+    if (testWindow[index + 1]) {
+      stroke(255);
+      strokeWeight(20);
+      line(point.x, point.y, testWindow[index + 1].x, testWindow[index + 1].y);
+    } else {
+      //if it's the lat point make a line to the first one
+      stroke(255);
+      strokeWeight(20);
+      line(point.x, point.y, testWindow[0].x, testWindow[0].y);
+    }
+  })
 }
 

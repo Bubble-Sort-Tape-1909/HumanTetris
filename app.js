@@ -2,11 +2,27 @@ let video;
 let poseNet;
 let poses = [];
 
+let scale;
+let tempScale;
+let rescale = true;
+
+
+
+function setRescale() {
+  setInterval(() => {
+    rescale = !rescale
+    tempScale = scale;
+  }, 6000);
+}
+
+setRescale();
+
+
 
 //Getting acsess to camera
 function setup() {
   //video screen resolution
-  createCanvas(1500, 900);
+  createCanvas(1920, 1080);
   video = createCapture(VIDEO);
   video.size(width, height);
 
@@ -36,6 +52,10 @@ function draw() {
   // We can call both functions to draw all keypoints and the skeletons
   drawKeypoints();
   drawSkeleton();
+
+  if (rescale) {
+    drawWindowPoints();
+  }
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -60,11 +80,8 @@ function drawKeypoints() {
 // A function to draw the skeletons
 function drawSkeleton() {
   // Loop through all the skeletons detected
-  console.log(poses)
   for (let i = 0; i < poses.length; i++) {
     let skeleton = poses[i].skeleton;
-
-
 
     let rightHipX = poses[i].pose.rightHip.x;
     let rightHipY = poses[i].pose.rightHip.y;
@@ -72,7 +89,7 @@ function drawSkeleton() {
     let rightKneeX = poses[i].pose.rightKnee.x;
     let rightKneeY = poses[i].pose.rightKnee.y;
 
-    let d = dist(rightHipX, rightHipY, rightKneeX, rightKneeY) /3;
+    scale = dist(rightHipX, rightHipY, rightKneeX, rightKneeY) / 3;
 
 
     // For every skeleton, loop through all body connections
@@ -80,13 +97,36 @@ function drawSkeleton() {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
 
-
-
-
       stroke(255);
-      strokeWeight(d);
+      strokeWeight(scale);
       line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
 
     }
   }
 }
+
+
+function drawWindowPoints() {
+  // Loop through all the poses detected
+  let x = 200;
+  let y = 200;
+
+
+  fill(0, 0, 255);
+  noStroke();
+  ellipse(x, y, 50, 50);
+
+
+  fill(0, 0, 255);
+  noStroke();
+  ellipse(x + tempScale * 15, y, 50, 50);
+
+  fill(0, 0, 255);
+  noStroke();
+  ellipse(x, y + tempScale * 15, 50, 50);
+
+  fill(0, 0, 255);
+  noStroke();
+  ellipse(x + tempScale * 15, y + tempScale * 15, 50, 50);
+}
+

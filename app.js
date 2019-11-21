@@ -6,6 +6,14 @@ let scale;
 let tempScale;
 let rescale = true;
 
+//Start x & y:
+let leftWristX = 0;
+let leftWristY = 0;
+
+let rightWristX = 0;
+let rightWristY = 0;
+
+
 
 //setIntervalOne to grab and update the current scale for window;
 function setRescaleOne() {
@@ -42,10 +50,20 @@ function setup() {
   video.hide();
 }
 
+
 function gotPoses(results) {
   poses = results;
+  if (poses.length > 0) {
+    leftWristX = poses[0].pose.keypoints[9].position.x;
+    leftWristY = poses[0].pose.keypoints[9].position.y;
+
+    rightWristX = poses[0].pose.keypoints[10].position.x;
+    rightWristY = poses[0].pose.keypoints[10].position.y;
+  }
 }
 
+// Test collision
+let hit = false;
 
 function modelReady() {
   select('#status').html('Model Loaded');
@@ -60,9 +78,17 @@ function draw() {
   drawKeypoints();
   drawSkeleton();
 
-  if (rescale) {
-    drawWindowPoints();
-  }
+
+  rect(200, 200, 100, 150);
+
+  ellipse(rightWristX, rightWristY, 100, 100);
+
+  hit = collideRectCircle(200, 200, 100, 150, rightWristX, rightWristY, 100);
+  print("colliding? " + hit);
+
+  // if (rescale) {
+  //   drawWindowPoints();
+  // }
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -76,9 +102,15 @@ function drawKeypoints() {
       let keypoint = pose.keypoints[j];
       // Only draw an ellipse is the pose probability is bigger than 0.2
       if (keypoint.score > 0.2) {
-        fill(255, 0, 0);
-        noStroke();
-        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+        if (keypoint.part === "nose") {
+          fill(255, 0, 0);
+          noStroke();
+          ellipse(keypoint.position.x, keypoint.position.y, 100, 100);
+        } else {
+          fill(255, 0, 0);
+          noStroke();
+          ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+        }
       }
     }
   }
@@ -101,7 +133,6 @@ function drawSkeleton() {
 
     // For every skeleton, loop through all body connections
     for (let j = 0; j < skeleton.length; j++) {
-
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
 
@@ -124,6 +155,7 @@ function drawWindowPoints() {
     { x: (x + tempScale * 15), y: (y + tempScale * 15) },
     { x: x, y: (y + tempScale * 15) }
   ];
+
   //Loop through all the points in window
   testWindow.forEach((point, index) => {
     fill(0, 0, 255);

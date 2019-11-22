@@ -1,10 +1,17 @@
+/* eslint-disable no-undef */
+
+
 let video;
 let poseNet;
 let poses = [];
 
 let scale;
 let tempScale;
+let tempLeftAnkleY;
 let rescale = true;
+
+let startingX;
+
 
 
 //Initialize start key point x & y:
@@ -58,25 +65,30 @@ function setRescaleOne() {
   setInterval(() => {
     rescale = !rescale
     tempScale = scale;
-  }, 6000);
+    tempLeftAnkleY = leftAnkleY;
+    startingX = setRandomPin(1920 - 5.5 * tempScale)
+  }, 8000);
 }
 //setIntervalTwo get invoked to update the current scale for window constantly;
 function setRescaleTwo() {
   setInterval(() => {
     rescale = !rescale
     tempScale = scale;
-  }, 6000);
+    tempLeftAnkleY = leftAnkleY;
+    startingX = setRandomPin(1920 - 5.5 * tempScale)
+  }, 8000);
 }
 
 setRescaleOne()
 setRescaleTwo()
 
 
+
+
 //Getting acsess to camera
 function setup() {
   //video screen resolution
   createCanvas(1920, 1080);
-
 
   video = createCapture(VIDEO);
   video.size(width, height);
@@ -90,6 +102,9 @@ function setup() {
   video.hide();
 }
 
+function setRandomPin(maxX) {
+  return Math.floor(Math.random() * Math.floor(maxX))
+}
 
 function gotPoses(results) {
   poses = results;
@@ -192,20 +207,22 @@ function gotPoses(results) {
 
   scale = dist(rightHipX, rightHipY, rightKneeX, rightKneeY);
 
+
+
   let windowShape = [
-    { x: 700, y: 1080 }, // 0
-    { x: 700, y: (1080 - 3 * tempScale) }, // 1
-    { x: (700 - 2 * tempScale), y: (1080 - 3 * tempScale) }, // 2
-    { x: (700 - 2 * tempScale), y: (1080 - 3.4 * tempScale) }, // 3
-    { x: 700, y: (1080 - 3.4 * tempScale) }, // 4
-    { x: 700, y: (1080 - 4 * tempScale) }, // 5
-    { x: (700 + tempScale), y: (1080 - 4 * tempScale) }, // 6
-    { x: (700 + tempScale), y: (1080 - 3.4 * tempScale) }, // 7
-    { x: (700 + 3 * tempScale), y: (1080 - 3.4 * tempScale) }, // 8
-    { x: (700 + 3 * tempScale), y: (1080 - 3 * tempScale) }, // 9
-    { x: (700 + tempScale), y: (1080 - 3 * tempScale) }, // 10
-    { x: (700 + tempScale), y: 1080 } // 11
-  ];
+    { x: startingX, y: (tempLeftAnkleY + 30) }, //0
+    { x: startingX, y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, //1
+    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 2
+    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 1.4 * tempScale) }, // 3
+    { x: (startingX), y: (tempLeftAnkleY + 30 - 1.4 * tempScale) }, //4
+    { x: (startingX), y: (tempLeftAnkleY + 30 - 2.1 * tempScale) }, // 5
+    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 2.1 * tempScale) }, // 6
+    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 2.7 * tempScale) }, // 7
+    { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY + 30 - 2.7 * tempScale) }, // 8
+    { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 9
+    { x: (startingX + 5.5 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 10
+    { x: (startingX + 5.5 * tempScale), y: (tempLeftAnkleY + 30) } // 11
+  ]
 
   windowShape.forEach(({ x, y }, index) => (
     poly[index] = createVector(x, y))

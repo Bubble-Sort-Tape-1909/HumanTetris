@@ -1,4 +1,6 @@
-import firebase from 'firebase'
+import firebase from '../../../firebase/Firebase'
+import history from '../../history'
+import {firebaseEmailAndPasswordSignIn} from '../../store/user'
 import React from 'react'
 import {connect} from 'react-redux'
 import {
@@ -68,24 +70,12 @@ class LoginForm extends React.Component {
     this.setState({[event.target.name]: event.target.value})
   }
 
-  onSignInClick = (email, password) => {
+  onSignInClick = () => {
     try {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
+      this.props
+        .firebaseEmailAndPasswordSignIn(this.state.email, this.state.password)
         .then(() => {
           history.push('/')
-        })
-        .catch(error => {
-          const errorCode = error.code
-          const errorMessage = error.message
-          alert(errorMessage)
-          console.log(
-            'error code: ',
-            errorCode,
-            ' || error message: ',
-            errorMessage
-          )
         })
     } catch (error) {
       console.log(error.toString(error))
@@ -93,4 +83,9 @@ class LoginForm extends React.Component {
   }
 }
 
-export default connect(null, null)(LoginForm)
+const mapDispatchToProps = dispatch => ({
+  firebaseEmailAndPasswordSignIn: (email, password) =>
+    dispatch(firebaseEmailAndPasswordSignIn(email, password))
+})
+
+export default connect(null, mapDispatchToProps)(LoginForm)

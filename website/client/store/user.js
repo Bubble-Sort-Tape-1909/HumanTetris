@@ -1,3 +1,4 @@
+import firebase from '../../firebase/Firebase'
 import axios from 'axios'
 import history from '../history'
 
@@ -21,10 +22,15 @@ const removeUser = () => ({type: REMOVE_USER})
 /**
  * THUNK CREATORS
  */
-export const me = () => async dispatch => {
+export const me = () => dispatch => {
   try {
-    const res = await axios.get('/auth/me')
-    dispatch(getUser(res.data || defaultUser))
+    var user = firebase.auth().currentUser
+    if (user) {
+      // User is signed in.
+      dispatch(getUser(user))
+    } else {
+      dispatch(getUser(defaultUser))
+    }
   } catch (err) {
     console.error(err)
   }
@@ -51,6 +57,32 @@ export const logout = () => async dispatch => {
     await axios.post('/auth/logout')
     dispatch(removeUser())
     history.push('/login')
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const firebaseEmailAndPasswordSignIn = (email, password) => dispatch => {
+  try {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    // .catch(error => {
+    //   const errorCode = error.code
+    //   const errorMessage = error.message
+    //   alert(errorMessage)
+    //   console.log(
+    //     'error code: ',
+    //     errorCode,
+    //     ' || error message: ',
+    //     errorMessage
+    //   )
+    // })
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user.id) {
+        // User is signed in.
+        dispatch(getUser(user))
+      }
+    })
   } catch (err) {
     console.error(err)
   }

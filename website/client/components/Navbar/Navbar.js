@@ -104,21 +104,27 @@ const Navbar = ({handleClick, isLoggedIn}) => (
 /**
  * CONTAINER
  */
-const mapState = state => {
+const mapStateToProps = state => {
   return {
-    isLoggedIn: !!state.user.id
+    name: 'signup',
+    displayName: 'Sign Up',
+    error: state.user.error
   }
 }
 
-const mapDispatch = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
-    handleClick() {
-      dispatch(logout())
+    handleSubmit(evt) {
+      evt.preventDefault()
+      const formName = evt.target.name
+      const email = evt.target.email.value
+      const password = evt.target.password.value
+      dispatch(signInWithEmailAndPassword(email, password, formName))
     }
   }
 }
 
-export default connect(mapState, mapDispatch)(Navbar)
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar)
 
 /**
  * PROP TYPES

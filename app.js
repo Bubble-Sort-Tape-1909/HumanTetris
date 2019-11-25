@@ -1,18 +1,14 @@
 /* eslint-disable no-undef */
-
-
 let video;
 let poseNet;
 let poses = [];
 
-let scale;
+let bodyScale;
 let tempScale;
 let tempLeftAnkleY;
 let rescale = true;
 
 let startingX;
-
-
 
 //Initialize start key point x & y:
 let noseX = 0;
@@ -58,31 +54,105 @@ let keyPointsToCollide;
 
 let poly = [];
 
+let isClear = false;
 
+let windowShapesName = ['split', 'tShape'];
+
+let currentWindowShape
+
+let getRandomWindowShapeName = (windowShapesName) => {
+  let randomIndex = Math.floor(Math.random() * windowShapesName.length)
+  return windowShapesName[randomIndex];
+}
+
+let windowShapeConstructor = (startingX, tempLeftAnkleY, tempScale, name) => {
+  if (name === 'split') {
+    return [
+      { x: startingX, y: (tempLeftAnkleY + 30) }, //0
+      { x: startingX, y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, //1
+      { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 2
+      { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 1.4 * tempScale) }, // 3
+      { x: (startingX), y: (tempLeftAnkleY + 30 - 1.4 * tempScale) }, //4
+      { x: (startingX), y: (tempLeftAnkleY + 30 - 2.1 * tempScale) }, // 5
+      { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 2.1 * tempScale) }, // 6
+      { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 2.7 * tempScale) }, // 7
+      { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY + 30 - 2.7 * tempScale) }, // 8
+      { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 9
+      { x: (startingX + 5.5 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 10
+      { x: (startingX + 5.5 * tempScale), y: (tempLeftAnkleY + 30) } // 11
+    ]
+  } else if (name === 'tShape') {
+    return [
+      { x: startingX, y: (tempLeftAnkleY + 40) }, // 0
+      { x: startingX, y: (tempLeftAnkleY - 2.5 * tempScale) }, // 1
+      { x: (startingX - 2 * tempScale), y: (tempLeftAnkleY - 2.5 * tempScale) }, // 2
+      { x: (startingX - 2 * tempScale), y: (tempLeftAnkleY - 3.4 * tempScale) }, // 3
+      { x: startingX, y: (tempLeftAnkleY - 3.4 * tempScale) }, // 4
+      { x: startingX, y: (tempLeftAnkleY - 4 * tempScale) }, // 5
+      { x: (startingX + 1.5 * tempScale), y: (tempLeftAnkleY - 4 * tempScale) }, // 6
+      { x: (startingX + 1.5 * tempScale), y: (tempLeftAnkleY - 3.4 * tempScale) }, // 7
+      { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY - 3.4 * tempScale) }, // 8
+      { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY - 2.5 * tempScale) }, // 9
+      { x: (startingX + 1.5 * tempScale), y: (tempLeftAnkleY - 2.5 * tempScale) }, // 10
+      { x: (startingX + 1.5 * tempScale), y: (tempLeftAnkleY + 40) } // 11
+    ]
+  }
+}
+
+// Test collision
+let hit = {
+  nose: false,
+  leftShoulder: false,
+  rightShoulder: false,
+  leftElbow: false,
+  rightElbow: false,
+  leftWrist: false,
+  rightWrist: false,
+  leftHip: false,
+  rightHip: false,
+  rightKnee: false,
+  leftKnee: false,
+  leftAnkle: false,
+  rightAnkle: false
+}
+
+let clear = (points) => {
+  for (let point in points) {
+    if (!points[point]) return false
+  }
+  return true
+}
 
 //setIntervalOne to grab and update the current scale for window;
-function setRescaleOne() {
-  setInterval(() => {
-    rescale = !rescale
-    tempScale = scale;
-    tempLeftAnkleY = leftAnkleY;
-    startingX = setRandomPin(1920 - 5.5 * tempScale)
-  }, 8000);
-}
+setInterval(() => {
+  rescale = !rescale
+  tempScale = bodyScale;
+  tempLeftAnkleY = leftAnkleY;
+  startingX = setRandomPin(1920 - 5.5 * tempScale)
+
+  let selectedWindowName = getRandomWindowShapeName(windowShapesName);
+  currentWindowShape = windowShapeConstructor(startingX, tempLeftAnkleY, tempScale, selectedWindowName);
+
+
+  isClear = clear(hit);
+
+  console.log('HIT OBJECT >>>', hit);
+  console.log(isClear)
+
+}, 8000);
 //setIntervalTwo get invoked to update the current scale for window constantly;
-function setRescaleTwo() {
-  setInterval(() => {
-    rescale = !rescale
-    tempScale = scale;
-    tempLeftAnkleY = leftAnkleY;
-    startingX = setRandomPin(1920 - 5.5 * tempScale)
-  }, 8000);
-}
 
-setRescaleOne()
-setRescaleTwo()
+setInterval(() => {
+  rescale = !rescale
+  tempScale = bodyScale;
+  tempLeftAnkleY = leftAnkleY;
+  startingX = setRandomPin(1920 - 5.5 * tempScale)
 
+  // console.log(hit);
+  // let result = clear(hit);
+  // console.log(result);
 
+}, 8000);
 
 
 //Getting acsess to camera
@@ -205,46 +275,16 @@ function gotPoses(results) {
     }
   }
 
-  scale = dist(rightHipX, rightHipY, rightKneeX, rightKneeY);
+  bodyScale = dist(rightHipX, rightHipY, rightKneeX, rightKneeY);
 
-
-
-  let windowShape = [
-    { x: startingX, y: (tempLeftAnkleY + 30) }, //0
-    { x: startingX, y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, //1
-    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 2
-    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 1.4 * tempScale) }, // 3
-    { x: (startingX), y: (tempLeftAnkleY + 30 - 1.4 * tempScale) }, //4
-    { x: (startingX), y: (tempLeftAnkleY + 30 - 2.1 * tempScale) }, // 5
-    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 2.1 * tempScale) }, // 6
-    { x: (startingX + 2 * tempScale), y: (tempLeftAnkleY + 30 - 2.7 * tempScale) }, // 7
-    { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY + 30 - 2.7 * tempScale) }, // 8
-    { x: (startingX + 3.5 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 9
-    { x: (startingX + 5.5 * tempScale), y: (tempLeftAnkleY + 30 - 0.8 * tempScale) }, // 10
-    { x: (startingX + 5.5 * tempScale), y: (tempLeftAnkleY + 30) } // 11
-  ]
-
-  windowShape.forEach(({ x, y }, index) => (
-    poly[index] = createVector(x, y))
-  )
+  let windowShape = currentWindowShape
+  if (windowShape) {
+    windowShape.forEach(({ x, y }, index) => (
+      poly[index] = createVector(x, y))
+    )
+  }
 }
 
-// Test collision
-let hit = {
-  nose: false,
-  leftShoulder: false,
-  rightShoulder: false,
-  leftElbow: false,
-  rightElbow: false,
-  leftWrist: false,
-  rightWrist: false,
-  leftHip: false,
-  rightHip: false,
-  rightKnee: false,
-  leftKnee: false,
-  leftAnkle: false,
-  rightAnkle: false
-}
 
 function modelReady() {
   select('#status').html('Model Loaded');
@@ -252,7 +292,11 @@ function modelReady() {
 
 function draw() {
   //where to show the image of video
+  // image(video, 0, 0, width / 2, height); //video on canvas, position, dimensions
+  translate(width, 0); // move to far corner
+  scale(-1.0, 1.0);    // flip x-axis backwards
   image(video, 0, 0, width, height);
+
   //You acn add filters by insertinf filter()
 
   beginShape();
@@ -263,19 +307,8 @@ function draw() {
 
 
   for (let pointName in keyPointsToCollide) {
-
-
     ellipse(keyPointsToCollide[pointName].x, keyPointsToCollide[pointName].y, 20, 20);
 
     hit = { ...hit, [pointName]: collideCirclePoly(keyPointsToCollide[pointName].x, keyPointsToCollide[pointName].y, 10, poly, true) };
-
-
-    // print("colliding? " + hit);
-
-    console.log('HIT OBJECT>>>>', hit)
   }
-
-  // if (rescale) {
-  //   drawWindowPoints();
-  // }
 }

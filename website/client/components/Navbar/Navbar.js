@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {logout} from '../../store'
-import {Menu, Dropdown, Popup} from 'semantic-ui-react'
+import {Menu, Dropdown, Popup, Icon} from 'semantic-ui-react'
+import './styles.css'
 
 const Navbar = ({handleClick, isLoggedIn}) => (
   <div>
@@ -23,6 +24,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           {/* The navbar will show these links if you're a guest */}
           <Menu.Item name="Human Tetris" as={Link} to="/" />
           <Menu.Item name="Play">
+            <Icon color="green" name="gamepad" />
             <Dropdown text="Play">
               <Dropdown.Menu>
                 <Dropdown.Item
@@ -30,12 +32,14 @@ const Navbar = ({handleClick, isLoggedIn}) => (
                   as={Link}
                   to="/play/singleplayer"
                 >
+                  <Icon name="user" />
                   Single-player
                 </Dropdown.Item>
                 <Popup
                   trigger={
                     <span>
                       <Dropdown.Item name="Multi-player" disabled={true}>
+                        <Icon name="users" />
                         Multi-player
                       </Dropdown.Item>
                     </span>
@@ -47,9 +51,11 @@ const Navbar = ({handleClick, isLoggedIn}) => (
             </Dropdown>
           </Menu.Item>
           <Menu.Item name="Leaderboards-Dropdown">
-            <Dropdown icon="winner" text="Leaderboards">
+            <Icon color="yellow" name="winner" />
+            <Dropdown text="Leaderboards">
               <Dropdown.Menu>
                 <Dropdown.Item name="Local" as={Link} to="/leaderboards/local">
+                  <Icon name="home" />
                   Local
                 </Dropdown.Item>
                 <Dropdown.Item
@@ -57,6 +63,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
                   as={Link}
                   to="/leaderboards/global"
                 >
+                  <Icon name="globe" />
                   Global
                 </Dropdown.Item>
               </Dropdown.Menu>

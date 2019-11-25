@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
-import {Login, Signup, UserHome} from './components/index'
+import {LoginForm, Signup, UserHome} from './components/index'
 import {me} from './store'
 
 /**
@@ -18,8 +18,10 @@ class Routes extends Component {
 
     return (
       <Switch>
-        {/* Routes placed here are available to all visitors */}
-        <Route path="/login" component={Login} />
+        {/* Routes placed here are available to all visitors
+          TODO: ADD ROUTE "/" FOR GUESTS
+        */}
+        <Route path="/login" component={LoginForm} />
         <Route path="/signup" component={Signup} />
         {isLoggedIn && (
           <Switch>
@@ -28,7 +30,7 @@ class Routes extends Component {
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
-        <Route component={Login} />
+        <Route component={LoginForm} />
       </Switch>
     )
   }

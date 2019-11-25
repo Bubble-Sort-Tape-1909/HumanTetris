@@ -29,7 +29,7 @@ class LoginForm extends React.Component {
           <Header as="h2" color="teal" textAlign="center">
             <Image src="/logo.png" /> Log-in to your account
           </Header>
-          <Form size="large" onSubmit={() => this.handleSubmit()}>
+          <Form size="large" onSubmit={() => this.onSignInClick()}>
             <Segment stacked>
               <Form.Input
                 fluid

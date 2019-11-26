@@ -1,15 +1,49 @@
+// import React from 'react'
+
+// import {Navbar} from './components/index'
+// import Routes from './routes'
+
+// const App = () => {
+//   return (
+//     <div>
+//       <Navbar />
+//       <Routes />
+//     </div>
+//   )
+// }
+
+// export default App
+
 import React from 'react'
 
-import {Navbar} from './components/index'
-import Routes from './routes'
+import {Route, Switch} from 'react-router-dom'
+import {connect} from 'react-redux'
 
-const App = () => {
+import ProtectedRoute from './components/ProtectedRoute'
+import UserHome from './components/UserHome/user-home'
+import LoginForm from './components/LoginForm/LoginForm'
+
+function App(props) {
+  const {isAuthenticated, isVerifying} = props
   return (
-    <div>
-      <Navbar />
-      <Routes />
-    </div>
+    <Switch>
+      <ProtectedRoute
+        exact
+        path="/"
+        component={UserHome}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+      />
+      <Route path="/login" component={LoginForm} />
+    </Switch>
   )
 }
 
-export default App
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    isVerifying: state.auth.isVerifying
+  }
+}
+
+export default connect(mapStateToProps)(App)

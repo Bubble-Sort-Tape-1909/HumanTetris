@@ -1,5 +1,4 @@
-import history from '../../history'
-import {firebaseEmailAndPasswordSignIn} from '../../store/user'
+import {Redirect} from 'react-router-dom'
 import React from 'react'
 import {connect} from 'react-redux'
 import {
@@ -11,6 +10,7 @@ import {
   Message,
   Segment
 } from 'semantic-ui-react'
+import {loginUser} from '../../store/auth'
 
 class LoginForm extends React.Component {
   constructor() {
@@ -23,69 +23,84 @@ class LoginForm extends React.Component {
     this.onSignInClick = this.onSignInClick.bind(this)
   }
 
+  handleEmailChange = ({target}) => {
+    this.setState({email: target.value})
+  }
+
+  handlePasswordChange = ({target}) => {
+    this.setState({password: target.value})
+  }
+
+  handleSubmit = () => {
+    const {dispatch} = this.props
+    const {email, password} = this.state
+
+    dispatch(loginUser(email, password))
+  }
+
   render() {
-    return (
-      <Grid textAlign="center" style={{height: '100vh'}} verticalAlign="middle">
-        <Grid.Column style={{maxWidth: 450}}>
-          <Header as="h2" color="teal" textAlign="center">
-            <Image src="/logo.png" /> Log-in to your account
-          </Header>
-          <Form size="large" onSubmit={() => this.onSignInClick()}>
-            <Segment stacked>
-              <Form.Input
-                fluid
-                icon="user"
-                iconPosition="left"
-                placeholder="E-mail address"
-                name="email"
-                onChange={this.handleChange}
-                value={this.state.email}
-              />
-              <Form.Input
-                fluid
-                icon="lock"
-                iconPosition="left"
-                placeholder="Password"
-                type="password"
-                name="password"
-                onChange={this.handleChange}
-                value={this.state.password}
-              />
+    const {classes, loginError, isAuthenticated} = this.props
+    if (isAuthenticated) {
+      return <Redirect to="/" />
+    } else {
+      return (
+        <Grid
+          textAlign="center"
+          style={{height: '100vh'}}
+          verticalAlign="middle"
+        >
+          <Grid.Column style={{maxWidth: 450}}>
+            <Header as="h2" color="teal" textAlign="center">
+              <Image src="/logo.png" /> Log-in to your account
+            </Header>
+            <Form size="large">
+              <Segment stacked>
+                <Form.Input
+                  fluid
+                  icon="user"
+                  iconPosition="left"
+                  placeholder="E-mail address"
+                  name="email"
+                  onChange={this.handleEmailChange}
+                  value={this.state.email}
+                />
+                <Form.Input
+                  fluid
+                  icon="lock"
+                  iconPosition="left"
+                  placeholder="Password"
+                  type="password"
+                  name="password"
+                  onChange={this.handlePasswordChange}
+                  value={this.state.password}
+                />
 
-              <Button color="teal" fluid size="large">
-                Login
-              </Button>
-            </Segment>
-          </Form>
-          <Message>
-            New to us? <a href="/signup">Sign Up</a>
-          </Message>
-        </Grid.Column>
-      </Grid>
-    )
-  }
-
-  handleChange(event) {
-    this.setState({[event.target.name]: event.target.value})
-  }
-
-  onSignInClick = () => {
-    try {
-      this.props.firebaseEmailAndPasswordSignIn(
-        this.state.email,
-        this.state.password
+                <Button
+                  color="teal"
+                  fluid
+                  size="large"
+                  onClick={this.handleSubmit}
+                >
+                  Login
+                </Button>
+              </Segment>
+            </Form>
+            <Message>
+              New to us? <a href="/signup">Sign Up</a>
+            </Message>
+          </Grid.Column>
+        </Grid>
       )
-    } catch (error) {
-      console.log(error.toString(error))
     }
   }
 }
 
-const mapDispatchToProps = dispatch => {
+function mapStateToProps(state) {
   return {
-    firebaseEmailAndPasswordSignIn: (email, password) =>
-      dispatch(firebaseEmailAndPasswordSignIn(email, password))
+    isLoggingIn: state.auth.isLoggingIn,
+    loginError: state.auth.loginError,
+    isAuthenticated: state.auth.isAuthenticated
   }
 }
 
-export default connect(null, mapDispatchToProps)(LoginForm)
+export default connect(mapStateToProps)(LoginForm)

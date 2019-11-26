@@ -1,34 +1,28 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
-
-/**
- * COMPONENT
- */
-export const UserHome = props => {
-  const {email} = props
-
-  return (
-    <div>
-      <h3>Welcome, {email}</h3>
-    </div>
-  )
-}
-
-/**
- * CONTAINER
- */
-const mapState = state => {
-  return {
-    email: state.user.email
+import {logoutUser} from '../../store/auth'
+class Home extends Component {
+  handleLogout = () => {
+    const {dispatch} = this.props
+    dispatch(logoutUser())
+  }
+  render() {
+    const {isLoggingOut, logoutError} = this.props
+    return (
+      <div>
+        <h1>This is your app's protected area.</h1>
+        <p>Any routes here will also be protected</p>
+        <button onClick={this.handleLogout}>Logout</button>
+        {isLoggingOut && <p>Logging Out....</p>}
+        {logoutError && <p>Error logging out</p>}
+      </div>
+    )
   }
 }
-
-export default connect(mapState)(UserHome)
-
-/**
- * PROP TYPES
- */
-UserHome.propTypes = {
-  email: PropTypes.string
+function mapStateToProps(state) {
+  return {
+    isLoggingOut: state.auth.isLoggingOut,
+    logoutError: state.auth.logoutError
+  }
 }
+export default connect(mapStateToProps)(Home)

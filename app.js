@@ -3,68 +3,51 @@ let video;
 let poseNet;
 let poses = [];
 
+// body/window scale
 let bodyScale;
 let tempScale;
-let tempLeftAnkleY;
 let rescale = true;
 
+//random starting point which is used to draw window shapes
+let tempLeftAnkleY;
 let startingX;
 
 //Initialize start key point x & y:
-let noseX = 0;
-let noseY = 0;
+let keyPointsToCollide = {
+  nose: { x: 0, y: 0 },
+  leftEye: { x: 0, y: 0 },
+  rightEye: { x: 0, y: 0 },
+  leftEar: { x: 0, y: 0 },
+  rightEar: { x: 0, y: 0 },
+  leftShoulder: { x: 0, y: 0 },
+  rightShoulder: { x: 0, y: 0 },
+  leftElbow: { x: 0, y: 0 },
+  rightElbow: { x: 0, y: 0 },
+  leftWrist: { x: 0, y: 0 },
+  rightWrist: { x: 0, y: 0 },
+  leftHip: { x: 0, y: 0 },
+  rightHip: { x: 0, y: 0 },
+  rightKnee: { x: 0, y: 0 },
+  leftKnee: { x: 0, y: 0 },
+  leftAnkle: { x: 0, y: 0 },
+  rightAnkle: { x: 0, y: 0 }
+}
 
-let leftShoulderX = 0;
-let leftShoulderY = 0;
-
-let rightShoulderX = 0;
-let rightShoulderY = 0;
-
-let leftElbowX = 0;
-let leftElbowY = 0;
-
-let rightElbowX = 0;
-let rightElbowY = 0;
-
-let leftWristX = 0;
-let leftWristY = 0;
-
-let rightWristX = 0;
-let rightWristY = 0;
-
-let leftHipX = 0;
-let leftHipY = 0;
-
-let rightHipX = 0;
-let rightHipY = 0;
-
-let rightKneeX = 0;
-let rightKneeY = 0;
-
-let leftKneeX = 0;
-let leftKneeY = 0;
-
-let leftAnkleX = 0;
-let leftAnkleY = 0;
-
-let rightAnkleX = 0;
-let rightAnkleY = 0;
-
-let keyPointsToCollide;
-
+// windowShape to collide
 let poly = [];
 
+// boolean that represents if the whole body is within the window shape
 let isClear = false;
 
-let windowShapesName = ['split', 'tShape'];
-
+// getting random window shape
 let currentWindowShape
-
+let windowShapesName = ['split', 'tShape', 'figureSkater'];
 let getRandomWindowShapeName = (windowShapesName) => {
   let randomIndex = Math.floor(Math.random() * windowShapesName.length)
   return windowShapesName[randomIndex];
 }
 
+// function that creates a window shape scaled in accoding the body of the player and how far away from camera he/she is staying
 let windowShapeConstructor = (startingX, tempLeftAnkleY, tempScale, name) => {
   if (name === 'split') {
     return [
@@ -96,6 +79,25 @@ let windowShapeConstructor = (startingX, tempLeftAnkleY, tempScale, name) => {
       { x: (startingX + 1.5 * tempScale), y: (tempLeftAnkleY - 2.5 * tempScale) }, // 10
       { x: (startingX + 1.5 * tempScale), y: (tempLeftAnkleY + 40) } // 11
     ]
+  } else if (name === 'figureSkater') {
+    return [
+      { x: startingX, y: (tempLeftAnkleY + 40) }, // 0
+      { x: startingX, y: (tempLeftAnkleY - tempScale) }, // 1
+      { x: (startingX - 0.5 * tempScale), y: (tempLeftAnkleY - 1.4 * tempScale) }, // 2
+      { x: startingX, y: (tempLeftAnkleY - 1.3 * tempScale) }, // 3
+      { x: startingX, y: (tempLeftAnkleY - 1.5 * tempScale) }, // 4
+      { x: (startingX - 0.8 * tempScale), y: (tempLeftAnkleY - 1.8 * tempScale) }, // 5
+      { x: (startingX - 0.8 * tempScale), y: (tempLeftAnkleY - 2.3 * tempScale) }, // 6
+      { x: startingX, y: (tempLeftAnkleY - 2.6 * tempScale) }, // 7
+      { x: (startingX + 0.5 * tempScale), y: (tempLeftAnkleY - 2.6 * tempScale) }, // 8
+      { x: (startingX + 1.3 * tempScale), y: (tempLeftAnkleY - 2.3 * tempScale) }, // 9
+      { x: (startingX + 1.3 * tempScale), y: (tempLeftAnkleY - 1.8 * tempScale) }, // 10
+      { x: (startingX + 0.5 * tempScale), y: (tempLeftAnkleY - 1.5 * tempScale) }, // 11
+      { x: (startingX + 0.5 * tempScale), y: (tempLeftAnkleY - 1.3 * tempScale) }, // 12
+      { x: (startingX + tempScale), y: (tempLeftAnkleY - 1.4 * tempScale) }, // 13
+      { x: (startingX + 0.5 * tempScale), y: (tempLeftAnkleY - tempScale) }, // 14
+      { x: (startingX + 0.5 * tempScale), y: (tempLeftAnkleY + 40) }, // 15
+    ]
   }
 }
 
@@ -116,6 +118,7 @@ let hit = {
   rightAnkle: false
 }
 
+// check if all 13 points are within the windowshape
 let clear = (points) => {
   for (let point in points) {
     if (!points[point]) return false
@@ -123,37 +126,38 @@ let clear = (points) => {
   return true
 }
 
+function setRandomPin(maxX) {
+  return Math.floor(Math.random() * Math.floor(maxX))
+}
+
 //setIntervalOne to grab and update the current scale for window;
-setInterval(() => {
+let runGameOne = () => setInterval(() => {
   rescale = !rescale
   tempScale = bodyScale;
-  tempLeftAnkleY = leftAnkleY;
+  tempLeftAnkleY = keyPointsToCollide.leftAnkle.y + 30;
   startingX = setRandomPin(1920 - 5.5 * tempScale)
 
+  //getting random WindowShape and fill it with current coordinats
   let selectedWindowName = getRandomWindowShapeName(windowShapesName);
   currentWindowShape = windowShapeConstructor(startingX, tempLeftAnkleY, tempScale, selectedWindowName);
 
-
+  // Checking if all 13 pointd are withing windowshape
   isClear = clear(hit);
 
-  console.log('HIT OBJECT >>>', hit);
-  console.log(isClear)
-
+  if (isClear) throw alert('CLEAR')
 }, 8000);
-//setIntervalTwo get invoked to update the current scale for window constantly;
 
-setInterval(() => {
+
+//setIntervalTwo get invoked to update the current scale for window constantly;
+let runGameTwo = () => setInterval(() => {
   rescale = !rescale
   tempScale = bodyScale;
-  tempLeftAnkleY = leftAnkleY;
+  tempLeftAnkleY = keyPointsToCollide.leftAnkle.y;
   startingX = setRandomPin(1920 - 5.5 * tempScale)
-
-  // console.log(hit);
-  // let result = clear(hit);
-  // console.log(result);
-
 }, 8000);
 
+runGameOne();
+runGameTwo();
 
 //Getting acsess to camera
 function setup() {
@@ -172,119 +176,29 @@ function setup() {
   video.hide();
 }
 
-function setRandomPin(maxX) {
-  return Math.floor(Math.random() * Math.floor(maxX))
-}
-
 function gotPoses(results) {
   poses = results;
+
+  //if there are any poses detected
   if (poses.length > 0) {
+    let posePoints = ['nose', 'leftEye', 'rightEye', 'leftEar', 'rightEar', 'leftShoulder', 'rightShoulder', 'leftElbow', 'rightElbow', 'leftWrist', 'rightWrist', 'leftHip', 'rightHip', 'rightKnee', 'leftKnee', 'leftAnkle', 'rightAnkle'];
 
-    noseX = poses[0].pose.keypoints[0].position.x;
-    noseY = poses[0].pose.keypoints[0].position.y;
-
-    leftShoulderX = poses[0].pose.keypoints[5].position.x;
-    leftShoulderY = poses[0].pose.keypoints[5].position.y;
-
-    rightShoulderX = poses[0].pose.keypoints[6].position.x;
-    rightShoulderY = poses[0].pose.keypoints[6].position.y;
-
-    leftElbowX = poses[0].pose.keypoints[7].position.x;
-    leftElbowY = poses[0].pose.keypoints[7].position.y;
-
-    rightElbowX = poses[0].pose.keypoints[8].position.x;
-    rightElbowY = poses[0].pose.keypoints[8].position.y;
-
-    leftWristX = poses[0].pose.keypoints[9].position.x;
-    leftWristY = poses[0].pose.keypoints[9].position.y;
-
-    rightWristX = poses[0].pose.keypoints[10].position.x;
-    rightWristY = poses[0].pose.keypoints[10].position.y;
-
-    leftHipX = poses[0].pose.keypoints[11].position.x;
-    leftHipY = poses[0].pose.keypoints[11].position.y;
-
-    rightHipX = poses[0].pose.keypoints[12].position.x;
-    rightHipY = poses[0].pose.keypoints[12].position.y;
-
-    rightKneeX = poses[0].pose.keypoints[13].position.x;
-    rightKneeY = poses[0].pose.keypoints[13].position.y;
-
-    leftKneeX = poses[0].pose.keypoints[14].position.x;
-    leftKneeY = poses[0].pose.keypoints[14].position.y;
-
-    leftAnkleX = poses[0].pose.keypoints[15].position.x;
-    leftAnkleY = poses[0].pose.keypoints[15].position.y;
-
-    rightAnkleX = poses[0].pose.keypoints[16].position.x;
-    rightAnkleY = poses[0].pose.keypoints[16].position.y;
-
-    keyPointsToCollide = {
-      nose: {
-        x: noseX,
-        y: noseY
-      },
-      leftShoulder: {
-        x: leftShoulderX,
-        y: leftShoulderY
-      },
-      rightShoulder: {
-        x: rightShoulderX,
-        y: rightShoulderY
-      },
-      leftElbow: {
-        x: leftElbowX,
-        y: leftElbowY
-      },
-      rightElbow: {
-        x: rightElbowX,
-        y: rightElbowY
-      },
-      leftWrist: {
-        x: leftWristX,
-        y: leftWristY
-      },
-      rightWrist: {
-        x: rightWristX,
-        y: rightWristY
-      },
-      leftHip: {
-        x: leftHipX,
-        y: leftHipY
-      },
-      rightHip: {
-        x: rightHipX,
-        y: rightHipY
-      },
-      rightKnee: {
-        x: rightKneeX,
-        y: rightKneeY
-      },
-      leftKnee: {
-        x: leftKneeX,
-        y: leftKneeY
-      },
-      leftAnkle: {
-        x: leftAnkleX,
-        y: leftAnkleY
-      },
-      rightAnkle: {
-        x: rightAnkleX,
-        y: rightAnkleY
-      }
-    }
+    poses[0].pose.keypoints.forEach((keyPoint, index) => {
+      keyPointsToCollide[posePoints[index]].x = keyPoint.position.x
+      keyPointsToCollide[posePoints[index]].y = keyPoint.position.y
+    })
   }
 
-  bodyScale = dist(rightHipX, rightHipY, rightKneeX, rightKneeY);
+  bodyScale = dist(keyPointsToCollide.rightHip.x, keyPointsToCollide.rightHip.y, keyPointsToCollide.rightKnee.x, keyPointsToCollide.rightKnee.y);
 
   let windowShape = currentWindowShape
   if (windowShape) {
+    poly = [];
     windowShape.forEach(({ x, y }, index) => (
       poly[index] = createVector(x, y))
     )
   }
 }
-
 
 function modelReady() {
   select('#status').html('Model Loaded');
@@ -292,19 +206,15 @@ function modelReady() {
 
 function draw() {
   //where to show the image of video
-  // image(video, 0, 0, width / 2, height); //video on canvas, position, dimensions
   translate(width, 0); // move to far corner
   scale(-1.0, 1.0);    // flip x-axis backwards
   image(video, 0, 0, width, height);
-
-  //You acn add filters by insertinf filter()
 
   beginShape();
   for (i = 0; i < poly.length; i++) {
     vertex(poly[i].x, poly[i].y);
   }
   endShape(CLOSE);
-
 
   for (let pointName in keyPointsToCollide) {
     ellipse(keyPointsToCollide[pointName].x, keyPointsToCollide[pointName].y, 20, 20);

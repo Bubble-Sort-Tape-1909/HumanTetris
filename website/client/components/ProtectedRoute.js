@@ -4,11 +4,9 @@ import {Route, Redirect} from 'react-router-dom'
 const ProtectedRoute = ({
   component: Component,
   isAuthenticated,
-  isVerifying,
-  ...rest
+  isVerifying
 }) => (
   <Route
-    {...rest}
     render={props =>
       isVerifying ? (
         <div />

@@ -19,8 +19,8 @@ class LoginForm extends React.Component {
       email: '',
       password: ''
     }
-    this.handleChange = this.handleChange.bind(this)
-    this.onSignInClick = this.onSignInClick.bind(this)
+    // this.handleChange = this.handleChange.bind(this)
+    // this.onSignInClick = this.onSignInClick.bind(this)
   }
 
   handleEmailChange = ({target}) => {

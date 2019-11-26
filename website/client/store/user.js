@@ -7,6 +7,8 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+const LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL'
+const LOGIN_ERROR = 'LOGIN_ERROR'
 
 /**
  * INITIAL STATE
@@ -18,10 +20,24 @@ const defaultUser = {}
  */
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
+const logIn = () => ({type: LOGIN_SUCCESSFUL})
+const logInError = err => ({type: LOGIN_ERROR, err})
 
 /**
  * THUNK CREATORS
  */
+export const firebaseEmailAndPasswordSignIn = (email, password) => dispatch => {
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(() => {
+      return dispatch(logIn())
+    })
+    .catch(err => {
+      return dispatch(logInError(err))
+    })
+}
+
 export const me = () => dispatch => {
   try {
     var user = firebase.auth().currentUser
@@ -62,32 +78,6 @@ export const logout = () => async dispatch => {
   }
 }
 
-export const firebaseEmailAndPasswordSignIn = (email, password) => dispatch => {
-  try {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-    // .catch(error => {
-    //   const errorCode = error.code
-    //   const errorMessage = error.message
-    //   alert(errorMessage)
-    //   console.log(
-    //     'error code: ',
-    //     errorCode,
-    //     ' || error message: ',
-    //     errorMessage
-    //   )
-    // })
-
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user.id) {
-        // User is signed in.
-        dispatch(getUser(user))
-      }
-    })
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 /**
  * REDUCER
  */
@@ -97,6 +87,11 @@ export default function(state = defaultUser, action) {
       return action.user
     case REMOVE_USER:
       return defaultUser
+    case LOGIN_ERROR:
+      return {...state, authError: 'Login Failed'}
+    case LOGIN_SUCCESSFUL:
+      console.log('login success!')
+      return {...state, authError: null}
     default:
       return state
   }

@@ -1,8 +1,8 @@
 import firebase from 'firebase/app'
-import 'firebase/database'
+import 'firebase/firestore'
 import 'firebase/auth'
 
-var firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyB_8aB4-hvElJdok-zo84vGN_nUorEv0JI',
   authDomain: 'humantetris.firebaseapp.com',
   databaseURL: 'https://humantetris.firebaseio.com',
@@ -12,8 +12,6 @@ var firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
-
-export const provider = new firebase.auth.GoogleAuthProvider()
 export const auth = firebase.auth()
 
 export default firebase

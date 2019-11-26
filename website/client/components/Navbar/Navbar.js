@@ -105,11 +105,8 @@ const Navbar = ({handleClick, isLoggedIn}) => (
  * CONTAINER
  */
 const mapStateToProps = state => {
-  return {
-    name: 'signup',
-    displayName: 'Sign Up',
-    error: state.user.error
-  }
+  console.log(state)
+  return {}
 }
 
 const mapDispatchToProps = dispatch => {
@@ -119,7 +116,7 @@ const mapDispatchToProps = dispatch => {
       const formName = evt.target.name
       const email = evt.target.email.value
       const password = evt.target.password.value
-      dispatch(signInWithEmailAndPassword(email, password, formName))
+      dispatch(firebaseEmailAndPasswordSignIn(email, password))
     }
   }
 }

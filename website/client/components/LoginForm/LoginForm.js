@@ -1,4 +1,3 @@
-import firebase from '../../../firebase/Firebase'
 import history from '../../history'
 import {firebaseEmailAndPasswordSignIn} from '../../store/user'
 import React from 'react'
@@ -72,20 +71,21 @@ class LoginForm extends React.Component {
 
   onSignInClick = () => {
     try {
-      this.props
-        .firebaseEmailAndPasswordSignIn(this.state.email, this.state.password)
-        .then(() => {
-          history.push('/')
-        })
+      this.props.firebaseEmailAndPasswordSignIn(
+        this.state.email,
+        this.state.password
+      )
     } catch (error) {
       console.log(error.toString(error))
     }
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  firebaseEmailAndPasswordSignIn: (email, password) =>
-    dispatch(firebaseEmailAndPasswordSignIn(email, password))
-})
+const mapDispatchToProps = dispatch => {
+  return {
+    firebaseEmailAndPasswordSignIn: (email, password) =>
+      dispatch(firebaseEmailAndPasswordSignIn(email, password))
+  }
+}
 
 export default connect(null, mapDispatchToProps)(LoginForm)

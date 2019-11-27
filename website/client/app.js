@@ -22,20 +22,24 @@ import {connect} from 'react-redux'
 import ProtectedRoute from './components/ProtectedRoute'
 import UserHome from './components/UserHome/user-home'
 import LoginForm from './components/LoginForm/LoginForm'
+import {Navbar} from './components/index'
 
 function App(props) {
   const {isAuthenticated, isVerifying} = props
   return (
-    <Switch>
-      <ProtectedRoute
-        exact
-        path="/"
-        component={UserHome}
-        isAuthenticated={isAuthenticated}
-        isVerifying={isVerifying}
-      />
-      <Route path="/login" component={LoginForm} />
-    </Switch>
+    <div>
+      <Navbar />
+      <Switch>
+        <ProtectedRoute
+          exact
+          path="/"
+          component={UserHome}
+          isAuthenticated={isAuthenticated}
+          isVerifying={isVerifying}
+        />
+        <Route path="/login" component={LoginForm} />
+      </Switch>
+    </div>
   )
 }
 

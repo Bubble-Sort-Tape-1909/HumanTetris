@@ -1,13 +1,14 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+require('../secrets')
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyB_8aB4-hvElJdok-zo84vGN_nUorEv0JI',
-  authDomain: 'humantetris.firebaseapp.com',
-  databaseURL: 'https://humantetris.firebaseio.com',
-  projectId: 'humantetris',
-  appId: '1:217643379306:web:9e24161271a101aeabb813'
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  appId: process.env.FIREBASE_APP_ID
 }
 
 // Initialize Firebase

@@ -2,9 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import {Router} from 'react-router-dom'
-import configureStore from './store/configureStore'
 import App from './app'
 import history from './history'
+import configureStore from './store/configureStore'
 
 // establishes socket connection
 import './socket'

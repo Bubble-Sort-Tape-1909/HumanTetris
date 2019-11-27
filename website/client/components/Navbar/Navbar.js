@@ -1,16 +1,18 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Menu, Dropdown, Popup, Icon} from 'semantic-ui-react'
-import './styles.css'
+import {Dropdown, Icon, Image, Menu, Popup} from 'semantic-ui-react'
 import {logoutUser} from '../../store/auth'
+import './styles.css'
 
 const Navbar = props => {
   return (
     <div>
       <nav>
-        <Menu>
-          <Menu.Item name="Human Tetris" as={Link} to="/" />
+        <Menu stackable>
+          <Menu.Item as={Link} to="/">
+            <Image src="/logo.png" size="mini" />
+          </Menu.Item>
           <Menu.Item name="Play">
             <Icon color="green" name="gamepad" />
             <Dropdown text="Play">
@@ -65,6 +67,9 @@ const Navbar = props => {
                   <Dropdown.Menu>
                     <Dropdown.Header content={`Hello ${props.user.email}!`} />
                     <Dropdown.Divider />
+                    <Dropdown.Item name="profile" as={Link} to="/profile">
+                      Profile
+                    </Dropdown.Item>
                     <Dropdown.Item name="logout" onClick={props.logoutUser}>
                       Logout
                     </Dropdown.Item>
@@ -91,7 +96,6 @@ const Navbar = props => {
           </Menu.Menu>
         </Menu>
       </nav>
-      <hr />
     </div>
   )
 }

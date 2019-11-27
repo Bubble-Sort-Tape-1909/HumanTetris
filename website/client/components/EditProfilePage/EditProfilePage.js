@@ -1,6 +1,6 @@
-import {Redirect} from 'react-router-dom'
 import React from 'react'
 import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 import {
   Button,
   Form,
@@ -12,15 +12,13 @@ import {
 } from 'semantic-ui-react'
 import {loginUser} from '../../store/auth'
 
-class LoginForm extends React.Component {
+class EditProfilePage extends React.Component {
   constructor() {
     super()
     this.state = {
       email: '',
       password: ''
     }
-    // this.handleChange = this.handleChange.bind(this)
-    // this.onSignInClick = this.onSignInClick.bind(this)
   }
 
   handleEmailChange = ({target}) => {
@@ -39,7 +37,7 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    const {classes, loginError, isAuthenticated} = this.props
+    const {loginError, isAuthenticated} = this.props
     if (isAuthenticated) {
       return <Redirect to="/" />
     } else {
@@ -53,11 +51,19 @@ class LoginForm extends React.Component {
             <Header as="h2" color="teal" textAlign="center">
               <Image src="/logo.png" /> Log-in to your account
             </Header>
-            <Form size="large">
+            <Form size="large" error>
               <Segment stacked>
+                {/* If there's a login errror, display an alert to the user */}
+                {loginError && (
+                  <Message
+                    error
+                    header="Error"
+                    content="Incorrect email or password"
+                  />
+                )}
                 <Form.Input
                   fluid
-                  icon="user"
+                  icon="mail"
                   iconPosition="left"
                   placeholder="E-mail address"
                   name="email"
@@ -74,13 +80,7 @@ class LoginForm extends React.Component {
                   onChange={this.handlePasswordChange}
                   value={this.state.password}
                 />
-
-                <Button
-                  color="teal"
-                  fluid
-                  size="large"
-                  onClick={this.handleSubmit}
-                >
+                <Button positive fluid size="large" onClick={this.handleSubmit}>
                   Login
                 </Button>
               </Segment>
@@ -103,4 +103,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(LoginForm)
+export default connect(mapStateToProps)(EditProfilePage)

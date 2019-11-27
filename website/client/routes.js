@@ -1,7 +1,13 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {withRouter, Route, Switch} from 'react-router-dom'
-import {Navbar, LoginForm, UserHome} from './components/index'
+import {Route, Switch, withRouter} from 'react-router-dom'
+import {
+  EditProfilePage,
+  LoginPage,
+  Navbar,
+  ProfilePage,
+  UserHome
+} from './components/index'
 import ProtectedRoute from './components/ProtectedRoute'
 
 /**
@@ -22,7 +28,21 @@ class Routes extends Component {
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
           />
-          <Route path="/login" component={LoginForm} />
+          <ProtectedRoute
+            exact
+            path="/profile"
+            component={ProfilePage}
+            isAuthenticated={isAuthenticated}
+            isVerifying={isVerifying}
+          />
+          <ProtectedRoute
+            exact
+            path="/profile/edit"
+            component={EditProfilePage}
+            isAuthenticated={isAuthenticated}
+            isVerifying={isVerifying}
+          />
+          <Route path="/login" component={LoginPage} />
         </Switch>
       </div>
     )

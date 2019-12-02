@@ -6,7 +6,8 @@ import {
   LoginPage,
   Navbar,
   ProfilePage,
-  UserHome
+  UserHome,
+  SinglePlayerPage
 } from './components/index'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -42,6 +43,7 @@ class Routes extends Component {
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
           />
+          <Route path="/play/singleplayer" component={SinglePlayerPage} />
           <Route path="/login" component={LoginPage} />
         </Switch>
       </div>

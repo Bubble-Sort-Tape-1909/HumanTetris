@@ -9,7 +9,7 @@ const Navbar = props => {
   return (
     <div>
       <nav>
-        <Menu stackable>
+        <Menu stackable borderless>
           <Menu.Item as={Link} to="/">
             <Image src="/logo.png" size="mini" />
           </Menu.Item>

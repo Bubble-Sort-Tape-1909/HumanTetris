@@ -8,7 +8,8 @@ import {
   Header,
   Image,
   Message,
-  Segment
+  Segment,
+  Icon
 } from 'semantic-ui-react'
 import {loginUser} from '../../store/auth'
 
@@ -33,7 +34,17 @@ class LoginPage extends React.Component {
     const {dispatch} = this.props
     const {email, password} = this.state
 
-    dispatch(loginUser(email, password))
+    dispatch(loginUser(email, password, 'EMAIL'))
+  }
+
+  handleGoogleSubmit = () => {
+    const {dispatch} = this.props
+    dispatch(loginUser(null, null, 'GOOGLE'))
+  }
+
+  handleFacebookSubmit = () => {
+    const {dispatch} = this.props
+    dispatch(loginUser(null, null, 'FACEBOOK'))
   }
 
   render() {
@@ -85,6 +96,15 @@ class LoginPage extends React.Component {
                 </Button>
               </Segment>
             </Form>
+            <Message>
+              <Button color="google plus" onClick={this.handleGoogleSubmit}>
+                <Icon name="google" /> Google
+              </Button>
+              <Button color="facebook">
+                <Icon name="facebook" onClick={this.handleFacebookSubmit} />
+                Facebook
+              </Button>
+            </Message>
             <Message>
               New to us? <a href="/signup">Sign Up</a>
             </Message>

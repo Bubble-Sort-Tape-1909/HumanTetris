@@ -1,5 +1,5 @@
 import {firebaseApp} from '../../firebase/Firebase'
-
+import firebase from 'firebase/app'
 /**
  * ACTION TYPES
  */
@@ -80,18 +80,44 @@ const verifySuccess = () => {
 /**
  * THUNK CREATORS
  */
-export const loginUser = (email, password) => dispatch => {
+export const loginUser = (email, password, method) => dispatch => {
   dispatch(requestLogin())
-  firebaseApp
-    .auth()
-    .signInWithEmailAndPassword(email, password)
-    .then(user => {
-      dispatch(receiveLogin(user))
-    })
-    .catch(error => {
-      console.error(error)
-      dispatch(loginError())
-    })
+  if (method === 'EMAIL') {
+    firebaseApp
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(user => {
+        dispatch(receiveLogin(user))
+      })
+      .catch(error => {
+        console.error(error)
+        dispatch(loginError())
+      })
+  } else if (method === 'GOOGLE') {
+    firebaseApp
+      .auth()
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then(result => {
+        const user = result.user
+        dispatch(receiveLogin(user))
+      })
+      .catch(error => {
+        console.error(error)
+        dispatch(loginError())
+      })
+  } else if (method === 'FACEBOOK') {
+    firebaseApp
+      .auth()
+      .signInWithPopup(new firebase.auth.FacebookAuthProvider())
+      .then(result => {
+        const user = result.user
+        dispatch(receiveLogin(user))
+      })
+      .catch(error => {
+        console.error(error)
+        dispatch(loginError())
+      })
+  }
 }
 
 export const verifyAuth = () => dispatch => {

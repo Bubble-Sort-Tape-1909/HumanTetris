@@ -43,7 +43,7 @@ class Routes extends Component {
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
           />
-          <Route path="/play/singleplayer" component={SinglePlayerPage} />
+          <Route path="/singleplayer" component={SinglePlayerPage} />
           <Route path="/login" component={LoginPage} />
         </Switch>
       </div>

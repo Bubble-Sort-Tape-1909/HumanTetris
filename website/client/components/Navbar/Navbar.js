@@ -20,7 +20,7 @@ const Navbar = props => {
                 <Dropdown.Item
                   name="Single-Player"
                   as={Link}
-                  to="/play/singleplayer"
+                  to="/singleplayer"
                 >
                   <Icon name="user" />
                   Single-player

@@ -52,7 +52,7 @@ let windowShapesName = [
   'tShape',
   'figureSkater',
   'jerrysHole',
-  'stopAndFrisk',
+  'jumpingJack',
   'runningMan',
   'breakDancer'
 ]

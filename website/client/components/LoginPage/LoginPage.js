@@ -34,17 +34,17 @@ class LoginPage extends React.Component {
     const {dispatch} = this.props
     const {email, password} = this.state
 
-    dispatch(loginUser(email, password, 'EMAIL'))
+    dispatch(loginUser('EMAIL', email, password))
   }
 
   handleGoogleSubmit = () => {
     const {dispatch} = this.props
-    dispatch(loginUser(null, null, 'GOOGLE'))
+    dispatch(loginUser('GOOGLE'))
   }
 
   handleFacebookSubmit = () => {
     const {dispatch} = this.props
-    dispatch(loginUser(null, null, 'FACEBOOK'))
+    dispatch(loginUser('FACEBOOK'))
   }
 
   render() {
@@ -97,6 +97,7 @@ class LoginPage extends React.Component {
               </Segment>
             </Form>
             <Message>
+              <h4>Or Login With</h4>
               <Button color="google plus" onClick={this.handleGoogleSubmit}>
                 <Icon name="google" /> Google
               </Button>

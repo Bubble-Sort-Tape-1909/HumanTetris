@@ -2,11 +2,33 @@ const db = require('../../firebase/Firebase').db
 
 //add user to the db, will need to add this to signup thunk
 // #### need to do a check for if username already exists, and deny if so
-function addUser(user) {
+async function addUser(user) {
+    // console.log(user.Email)
+    console.log('>>>>>>>>>>>>>>>>>>>>>>1')
+    let userDoesNotExist = false
   let collection = db.collection('TestUsers')
-  .doc(`${user.Email}`)
-  .set(user)
-  .then(console.log(`${user} added to the database.`))
+  await collection.where('Email', '==', `${user.Email}`).get().then((snapshot) => {
+      console.log(snapshot.docs)
+      if(snapshot.docs.length === 0){
+          userDoesNotExist = true
+      }
+  })
+  console.log(userDoesNotExist)
+  if (userDoesNotExist){
+    collection
+    .doc(`${user.Email}`)
+    .set(user)
+    .then(console.log(`${user.Email} added to the database.`))
+  }
+  
+//   console.log('exists', !!collection.doc(`${user.Email}`))
+//   console.log('doesnt exist', !collection.doc(`${user.Email}`))
+//   if (!collection.doc(`${user.Email}`)){
+//       collection
+//       .doc(`${user.Email}`)
+//       .set(user)
+//       .then(console.log(`${user.Email} added to the database.`))
+//   }
 }
 
 //find top ten scores in db

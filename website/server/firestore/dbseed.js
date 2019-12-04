@@ -56,4 +56,4 @@ function addSeed() {
 
 // getTopTenHighScores()
 
-// addSeed()
+addSeed()

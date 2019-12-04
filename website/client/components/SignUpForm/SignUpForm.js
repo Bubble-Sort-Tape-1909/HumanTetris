@@ -4,10 +4,12 @@ import {
   Form,
   Grid,
   Header,
+  Icon
 } from 'semantic-ui-react'
 import {Redirect} from 'react-router-dom'
 import {auth} from '../../../firebase/Firebase'
 import {addUser} from '../../../server/firestore/databaseFunctions'
+
 
 class SignUpForm extends React.Component {
   constructor() {
@@ -62,6 +64,7 @@ class SignUpForm extends React.Component {
       <Grid textAlign="center">
         <Grid.Column>
           <Header as="h3" color="red" textAlign="center">
+          <Icon color="green" name="sign-in" />
             New Player Sign Up
           </Header>
           <Form size="large" onSubmit={() => this.handleSubmit(event)}>

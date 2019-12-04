@@ -1,11 +1,11 @@
-/* eslint-disable no-undef */
-
 let video
 let poseNet
 let poses = []
 let selectedWindowName
+let gameStarted = false
 
 let playersScore = 0
+let gameOver = false
 
 // body/window scale
 let bodyScale
@@ -14,6 +14,9 @@ let tempScale
 //random starting point which is used to draw window shapes
 let tempLeftAnkleY
 let startingX
+
+// initialize draw
+let startGame = false
 
 //Initialize start key point x & y:
 let keyPointsToCollide = {
@@ -318,8 +321,12 @@ const runGame = () => {
   let firstLoop = true
 
   const gameLoop = setInterval(() => {
+    if (!startGame) {
+      clearInterval(gameLoop)
+    }
+
     if (firstLoop) {
-      gameCounter = -3
+      gameCounter = -6
       firstLoop = false
     }
 
@@ -341,18 +348,19 @@ const runGame = () => {
     }
 
     // Checking if all 13 pointd are withing windowshape
-    if (gameCounter === 8) {
+    if (gameCounter === 7) {
       isClear = clear(hit)
-      isClearGlobal = isClear
       if (isClear) {
-        playersScore += 100
         score()
       } else {
-        // comment in for gameplay
+        startGame = false
+        gameStarted = false
+        gameOver = true
+        console.log(gameOver)
         clearInterval(gameLoop)
       }
     }
-    if (gameCounter === 12) {
+    if (gameCounter === 15) {
       gameCounter = 0
     } else {
       gameCounter++
@@ -360,16 +368,19 @@ const runGame = () => {
   }, 1000)
 }
 
-runGame()
+function modelReady() {
+  if (select('#status')) {
+    select('#status').html('Model Loaded')
+  }
+}
 
 //Getting acsess to camera
 function setup() {
   //video screen resolution
   createCanvas(1920, 1080)
-
   video = createCapture(VIDEO)
-  video.size(width, height)
 
+  video.size(width, height)
   // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(video, modelReady)
   // This sets up an event that fills the global variable "poses"
@@ -424,42 +435,155 @@ function gotPoses(results) {
   }
 }
 
-function modelReady() {
-  select('#status').html('Model Loaded')
+// function draw() {
+
+//   if (document.getElementById('startGame')) {
+
+//     let startGameButton = document.getElementById('startGame');
+
+//     startGameButton.addEventListener('click', (event) => {
+
+//       startGame = true;
+
+//       if (!gameStarted) {
+//         runGame()
+//         gameStarted = true
+//       }
+//     })
+//   } else {
+//     startGame = false
+//     gameStarted = false
+//   }
+
+//   if (startGame) {
+//     //where to show the image of video
+//     translate(width, 0) // move to far corner
+//     scale(-1.0, 1.0) // flip x-axis backwards
+//     image(video, 0, 0, width, height)
+
+//     if (gameCounter < 8 && gameCounter > 0) {
+//       drawShape()
+//     }
+
+//     for (let pointName in keyPointsToCollide) {
+//       ellipse(
+//         keyPointsToCollide[pointName].x,
+//         keyPointsToCollide[pointName].y,
+//         20,
+//         20
+//       )
+
+//       hit = {
+//         ...hit,
+//         [pointName]: collideCirclePoly(
+//           keyPointsToCollide[pointName].x,
+//           keyPointsToCollide[pointName].y,
+//           10,
+//           poly,
+//           true
+//         )
+//       }
+//     }
+//     translate(width, 0) // move to far corner
+//     scale(-1.0, 1.0)
+//     drawWords()
+//   } else {
+//     strokeWeight(0);
+//     fill('white')
+//     rect(0, 0, 1920, 1080)
+
+//     // tint(255, 127); // Display at half opacity
+//   }
+// }
+
+// eslint-disable-next-line complexity
+const drawWords = () => {
+  if (!gameOver) {
+    if (gameCounter === -5 || gameCounter === 10) {
+      textSize(80)
+      fill('red')
+      text(`Get in the starting position `, 200, 520)
+    } else if (gameCounter === 8 && isClear) {
+      textSize(80)
+      fill('red')
+      text(`  YOU MADE IT CLEAR => YOUR SCORE: ${playersScore}`, 200, 520)
+    } else if (gameCounter === 12 || gameCounter === -3) {
+      textSize(100)
+      fill('black')
+      text('READY', 800, 520)
+    } else if ((gameCounter === 13) | (gameCounter === -2)) {
+      textSize(100)
+      fill('black')
+      text('SET', 800, 520)
+    } else if ((gameCounter === 14) | (gameCounter === -1)) {
+      textSize(100)
+      fill('black')
+      text('GO', 800, 520)
+    }
+    // else {
+    //   textSize(85);
+    //   fill('red');
+    //   text(`NOT CLEAR - GAME OVER - YOUR SCORE: ${playersScore}`, 200, 520);
+    // }
+  }
 }
 
 function draw() {
-  //where to show the image of video
-  translate(width, 0) // move to far corner
-  scale(-1.0, 1.0) // flip x-axis backwards
-  image(video, 0, 0, width, height)
+  if (document.getElementById('startGame')) {
+    let startGameButton = document.getElementById('startGame')
 
-  if (gameCounter < 8 && gameCounter > 0) {
-    drawShape()
+    startGameButton.addEventListener('click', event => {
+      startGame = true
+      gameOver = false
+
+      if (!gameStarted) {
+        runGame()
+        gameStarted = true
+      }
+    })
+  } else {
+    startGame = false
+    gameStarted = false
   }
 
-  for (let pointName in keyPointsToCollide) {
-    ellipse(
-      keyPointsToCollide[pointName].x,
-      keyPointsToCollide[pointName].y,
-      20,
-      20
-    )
+  if (startGame) {
+    //where to show the image of video
+    translate(width, 0) // move to far corner
+    scale(-1.0, 1.0) // flip x-axis backwards
+    image(video, 0, 0, width, height)
 
-    hit = {
-      ...hit,
-      [pointName]: collideCirclePoly(
+    if (1 < gameCounter && gameCounter < 8) {
+      drawShape()
+    }
+
+    for (let pointName in keyPointsToCollide) {
+      ellipse(
         keyPointsToCollide[pointName].x,
         keyPointsToCollide[pointName].y,
-        10,
-        poly,
-        true
+        20,
+        20
       )
+
+      hit = {
+        ...hit,
+        [pointName]: collideCirclePoly(
+          keyPointsToCollide[pointName].x,
+          keyPointsToCollide[pointName].y,
+          10,
+          poly,
+          true
+        )
+      }
     }
+
+    translate(width, 0) // move to far corner
+    scale(-1.0, 1.0)
+    drawWords()
+  } else {
+    strokeWeight(0)
+    fill('white')
+    rect(0, 0, 1920, 1080)
   }
-  translate(width, 0) // move to far corner
-  scale(-1.0, 1.0)
-  drawWords()
 }
 
 const drawShape = () => {
@@ -468,34 +592,4 @@ const drawShape = () => {
     vertex(poly[i].x, poly[i].y)
   }
   endShape(CLOSE)
-}
-
-const drawWords = () => {
-  if (gameCounter === -3 || gameCounter === 9) {
-    textSize(80)
-    fill('red')
-    text(`Get in the starting position `, 200, 520)
-  } else if (gameCounter === 8) {
-    if (isClearGlobal) {
-      textSize(80)
-      fill('red')
-      text(`CLEAR!!!!!! => YOUR SCORE: ${playersScore}`, 200, 520)
-    } else {
-      textSize(80)
-      fill('red')
-      text(`YOUR SCORE: ${playersScore}`, 200, 520)
-    }
-  } else if (gameCounter === 10) {
-    textSize(100)
-    fill('black')
-    text('READY', 800, 520)
-  } else if (gameCounter === 11) {
-    textSize(100)
-    fill('black')
-    text('SET', 800, 520)
-  } else if (gameCounter === 12) {
-    textSize(100)
-    fill('black')
-    text('GO', 800, 520)
-  }
 }

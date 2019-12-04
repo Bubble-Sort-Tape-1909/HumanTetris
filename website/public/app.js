@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 let video
 let poseNet
 let poses = []
@@ -5,6 +6,7 @@ let selectedWindowName
 let gameStarted = false
 
 let playersScore = 0
+
 let gameOver = false
 
 // body/window scale
@@ -59,6 +61,47 @@ let windowShapesName = [
   'runningMan',
   'breakDancer'
 ]
+
+// create starting point for the particular shape
+let minMaxX
+function startingPoint(name, ts) {
+  if (name === 'jumpingJack') {
+    minMax = {
+      maxX: 3 * ts,
+      minX: 0
+    }
+  } else if (name === 'split') {
+    minMaxX = {
+      maxX: 5.5 * ts,
+      minX: 0
+    }
+  } else if (name === 'tShape') {
+    minMaxX = {
+      maxX: 3.5 * ts,
+      minX: 2 * ts
+    }
+  } else if (name === 'figureSkater') {
+    minMaxX = {
+      maxX: 1.3 * ts,
+      minX: 0.8 * ts
+    }
+  } else if (name === 'jerrysHole') {
+    minMaxX = {
+      maxX: 2 * ts,
+      minX: 0
+    }
+  } else if (name === 'runningMan') {
+    minMaxX = {
+      maxX: 1.9 * ts,
+      minX: ts
+    }
+  } else if (name === 'breakDancer')
+    minMaxX = {
+      maxX: 2.3 * ts,
+      minX: 1.5 * ts
+    }
+}
+
 let getRandomWindowShapeName = windowShapesName => {
   let randomIndex = Math.floor(Math.random() * windowShapesName.length)
   return windowShapesName[randomIndex]
@@ -248,15 +291,15 @@ let windowShapeConstructor = (startingX, tempLeftAnkleY, tempScale, name) => {
     return [
       {x: startingX, y: tempLeftAnkleY}, //0
       {x: startingX, y: tempLeftAnkleY - tempScale}, //1
-      {x: startingX - 2.5 * tempScale, y: tempLeftAnkleY - tempScale}, //2
+      {x: startingX - 1.5 * tempScale, y: tempLeftAnkleY - tempScale}, //2
       {x: startingX - 1.5 * tempScale, y: tempLeftAnkleY - 1.2 * tempScale}, //3
       {x: startingX, y: tempLeftAnkleY - 1.2 * tempScale}, //4
-      {x: startingX, y: tempLeftAnkleY - 2 * tempScale}, //5
-      {x: startingX - 1.5 * tempScale, y: tempLeftAnkleY - 2 * tempScale}, //6
+      {x: startingX, y: tempLeftAnkleY - 1.8 * tempScale}, //5
+      {x: startingX - 1.5 * tempScale, y: tempLeftAnkleY - 1.8 * tempScale}, //6
       {x: startingX - 1.5 * tempScale, y: tempLeftAnkleY - 2.5 * tempScale}, //7
       {x: startingX + 2.3 * tempScale, y: tempLeftAnkleY - 2.5 * tempScale}, //8
-      {x: startingX + 2.3 * tempScale, y: tempLeftAnkleY - 2 * tempScale}, //9
-      {x: startingX + 0.8 * tempScale, y: tempLeftAnkleY - 2 * tempScale}, //10
+      {x: startingX + 2.3 * tempScale, y: tempLeftAnkleY - 1.8 * tempScale}, //9
+      {x: startingX + 0.8 * tempScale, y: tempLeftAnkleY - 1.8 * tempScale}, //10
       {x: startingX + 0.8 * tempScale, y: tempLeftAnkleY - 1.2 * tempScale}, //11
       {x: startingX + 2.3 * tempScale, y: tempLeftAnkleY - 1.2 * tempScale}, //12
       {x: startingX + 2.3 * tempScale, y: tempLeftAnkleY - tempScale}, //13
@@ -291,8 +334,11 @@ let clear = points => {
   return true
 }
 
-function setRandomPin(maxX) {
-  return Math.floor(Math.random() * Math.floor(maxX))
+function setRandomPin(maxX, minX = 0) {
+  let startingX = minX + Math.floor(Math.random() * (1920 - maxX - minX))
+  if (startingX + maxX <= 1920 && startingX - minX >= 0) {
+    return startingX
+  } else return 640
 }
 
 score = () => {
@@ -311,10 +357,6 @@ score = () => {
   } else if (selectedWindowName === 'breakDancer') {
     playersScore += 500
   }
-  // for future scoring purposes
-  // if (morecollisions > 0) {
-  //   playersScore += morecollisions * 50
-  // }
 }
 
 const runGame = () => {
@@ -335,10 +377,19 @@ const runGame = () => {
       tempScale = bodyScale
       // move to getStart point function which run every 8 secs
       tempLeftAnkleY = keyPointsToCollide.leftAnkle.y + 30
+      if (tempLeftAnkleY > 1080) {
+        tempLeftAnkleY = 1080
+      }
       startingX = setRandomPin(1920 - 5.5 * tempScale)
 
       //getting random WindowShape and fill it with current coordinats
       selectedWindowName = getRandomWindowShapeName(windowShapesName)
+
+      // what is min X and Max X is
+      startingPoint(selectedWindowName, tempScale)
+      // what the actual starting X is depending on the width of the screen and player's height
+      startingX = setRandomPin(minMaxX.maxX, minMaxX.minX)
+
       currentWindowShape = windowShapeConstructor(
         startingX,
         tempLeftAnkleY,
@@ -356,11 +407,10 @@ const runGame = () => {
         startGame = false
         gameStarted = false
         gameOver = true
-        console.log(gameOver)
         clearInterval(gameLoop)
       }
     }
-    if (gameCounter === 15) {
+    if (gameCounter === 14) {
       gameCounter = 0
     } else {
       gameCounter++
@@ -435,89 +485,33 @@ function gotPoses(results) {
   }
 }
 
-// function draw() {
-
-//   if (document.getElementById('startGame')) {
-
-//     let startGameButton = document.getElementById('startGame');
-
-//     startGameButton.addEventListener('click', (event) => {
-
-//       startGame = true;
-
-//       if (!gameStarted) {
-//         runGame()
-//         gameStarted = true
-//       }
-//     })
-//   } else {
-//     startGame = false
-//     gameStarted = false
-//   }
-
-//   if (startGame) {
-//     //where to show the image of video
-//     translate(width, 0) // move to far corner
-//     scale(-1.0, 1.0) // flip x-axis backwards
-//     image(video, 0, 0, width, height)
-
-//     if (gameCounter < 8 && gameCounter > 0) {
-//       drawShape()
-//     }
-
-//     for (let pointName in keyPointsToCollide) {
-//       ellipse(
-//         keyPointsToCollide[pointName].x,
-//         keyPointsToCollide[pointName].y,
-//         20,
-//         20
-//       )
-
-//       hit = {
-//         ...hit,
-//         [pointName]: collideCirclePoly(
-//           keyPointsToCollide[pointName].x,
-//           keyPointsToCollide[pointName].y,
-//           10,
-//           poly,
-//           true
-//         )
-//       }
-//     }
-//     translate(width, 0) // move to far corner
-//     scale(-1.0, 1.0)
-//     drawWords()
-//   } else {
-//     strokeWeight(0);
-//     fill('white')
-//     rect(0, 0, 1920, 1080)
-
-//     // tint(255, 127); // Display at half opacity
-//   }
-// }
-
 // eslint-disable-next-line complexity
 const drawWords = () => {
   if (!gameOver) {
     if (gameCounter === -5 || gameCounter === 10) {
+      strokeWeight(3)
       textSize(80)
-      fill('red')
+      fill('white')
       text(`Get in the starting position `, 200, 520)
     } else if (gameCounter === 8 && isClear) {
+      strokeWeight(3)
       textSize(80)
-      fill('red')
-      text(`  YOU MADE IT CLEAR => YOUR SCORE: ${playersScore}`, 200, 520)
+      fill('white')
+      text(`YOU MADE IT CLEAR => YOUR SCORE: ${playersScore}`, 200, 520)
     } else if (gameCounter === 12 || gameCounter === -3) {
+      strokeWeight(3)
       textSize(100)
-      fill('black')
+      fill('white')
       text('READY', 800, 520)
     } else if ((gameCounter === 13) | (gameCounter === -2)) {
+      strokeWeight(3)
       textSize(100)
-      fill('black')
+      fill('white')
       text('SET', 800, 520)
     } else if ((gameCounter === 14) | (gameCounter === -1)) {
+      strokeWeight(3)
       textSize(100)
-      fill('black')
+      fill('white')
       text('GO', 800, 520)
     }
     // else {

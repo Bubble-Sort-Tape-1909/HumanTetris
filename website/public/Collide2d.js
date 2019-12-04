@@ -77,7 +77,7 @@ p5.prototype.collidePointEllipse = function(x, y, cx, cy, dx, dy) {
   // Compare the point to its equivalent on the ellipse
   var xx = x - cx,
     yy = y - cy
-  var eyy = ry * this.sqrt(this.abs(rx * rx - xx * xx)) / rx
+  var eyy = (ry * this.sqrt(this.abs(rx * rx - xx * xx))) / rx
   return yy <= eyy && yy >= -eyy
 }
 
@@ -289,7 +289,7 @@ p5.prototype.collidePointPoly = function(px, py, vertices) {
     // compare position, flip 'collision' variable back and forth
     if (
       ((vc.y > py && vn.y < py) || (vc.y < py && vn.y > py)) &&
-      px < (vn.x - vc.x) * (py - vc.y) / (vn.y - vc.y) + vc.x
+      px < ((vn.x - vc.x) * (py - vc.y)) / (vn.y - vc.y) + vc.x
     ) {
       collision = !collision
     }

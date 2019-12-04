@@ -1,11 +1,6 @@
-// import firebase from 'firebase/app'
-// import 'firebase/auth'
-// import 'firebase/firestore'
-// require('../secrets')
-
 const firebase = require('firebase/app')
-require('firebase/firestore')
 require('firebase/auth')
+require('firebase/firestore')
 require('../secrets')
 
 const firebaseConfig = {

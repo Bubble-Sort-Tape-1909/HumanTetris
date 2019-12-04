@@ -80,13 +80,14 @@ const verifySuccess = () => {
 /**
  * THUNK CREATORS
  */
-export const loginUser = (email, password, method) => dispatch => {
+export const loginUser = (method, email, password) => dispatch => {
   dispatch(requestLogin())
   if (method === 'EMAIL') {
     firebaseApp
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
+        firebase.auth().currentUser.sendEmailVerification()
         dispatch(receiveLogin(user))
       })
       .catch(error => {
@@ -98,6 +99,7 @@ export const loginUser = (email, password, method) => dispatch => {
       .auth()
       .signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then(result => {
+        firebase.auth().currentUser.sendEmailVerification()
         const user = result.user
         dispatch(receiveLogin(user))
       })
@@ -110,6 +112,7 @@ export const loginUser = (email, password, method) => dispatch => {
       .auth()
       .signInWithPopup(new firebase.auth.FacebookAuthProvider())
       .then(result => {
+        firebase.auth().currentUser.sendEmailVerification()
         const user = result.user
         dispatch(receiveLogin(user))
       })

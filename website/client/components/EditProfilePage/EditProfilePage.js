@@ -33,7 +33,7 @@ class EditProfilePage extends React.Component {
     const {dispatch} = this.props
     const {email, password} = this.state
 
-    dispatch(loginUser(email, password, 'EMAIL'))
+    dispatch(loginUser('EMAIL', email, password))
   }
 
   render() {

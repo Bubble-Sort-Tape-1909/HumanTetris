@@ -56,8 +56,8 @@ export  class SinglePlayerPage extends Component {
           Start Game
         </button>
 
-        <h1>Ypur score: {this.state.userScore}</h1>
-        <h1 id="gameScore"> </h1>
+        <h1>Your Final Score: </h1>
+        <h1 id="gameScore"> 0 </h1>
       </div>
     )
   }

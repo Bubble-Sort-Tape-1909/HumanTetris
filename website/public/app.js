@@ -1,3 +1,8 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-undef */
+// import store from '../client/index'
+// import { sendUserScore } from '../client/store/userScore'
+
 let video
 let poseNet
 let poses = []
@@ -404,10 +409,21 @@ const runGame = () => {
       if (isClear) {
         score()
       } else {
+        // let gameDiv = document.getElementById("Game");
+
+        // let scoreToRender = document.createElement("h1")
+        // scoreToRender.innerHTML = playersScore;
+        // gameDiv.appendChild(scoreToRender);
+
+        document.getElementById('gameScore').innerText = String(playersScore)
+
         startGame = false
         gameStarted = false
         gameOver = true
         song.stop()
+
+        playersScore = 0
+
         clearInterval(gameLoop)
       }
     }
@@ -523,11 +539,6 @@ const drawWords = () => {
       fill('white')
       text('GO', 800, 520)
     }
-    // else {
-    //   textSize(85);
-    //   fill('red');
-    //   text(`NOT CLEAR - GAME OVER - YOUR SCORE: ${playersScore}`, 200, 520);
-    // }
   }
 }
 

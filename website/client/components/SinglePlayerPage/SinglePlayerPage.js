@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux'
+
 import {sendUserScore} from '../../store/userScore'
 
-export default class SinglePlayerPage extends Component {
+
+export  class SinglePlayerPage extends Component {
   constructor() {
     super()
     this.state = {
@@ -20,8 +23,7 @@ export default class SinglePlayerPage extends Component {
         })
 
         if (this.state.userScore) {
-          console.log('inside of if')
-          sendUserScore(this.userScore)()
+          this.props.sendUserScore(this.state.userScore)
         }
       } else if (mutation.type === 'attributes') {
         console.log(
@@ -60,3 +62,9 @@ export default class SinglePlayerPage extends Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  sendUserScore: (userScore) => dispatch(sendUserScore(userScore))
+})
+
+export default connect(null , mapDispatchToProps)(SinglePlayerPage)

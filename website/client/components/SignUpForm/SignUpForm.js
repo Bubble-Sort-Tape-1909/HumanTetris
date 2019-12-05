@@ -27,7 +27,7 @@ class SignUpForm extends React.Component {
     this.setState({[event.target.name]: event.target.value})
   }
 
-  handleSubmit(event) {2
+  handleSubmit(event) {
     event.preventDefault()
     if (
       this.state.displayName.length < 1 ||

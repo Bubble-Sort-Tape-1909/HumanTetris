@@ -22,38 +22,6 @@ async function addUser(user) {
   }
 }
 
-function deleteQueryBatch(db, query, batchSize, resolve, reject) {
-  query.get()
-    .then((snapshot) => {
-      // When there are no documents left, we are done
-      if (snapshot.size == 0) {
-        return 0;
-      }
-
-      // Delete documents in a batch
-      let batch = db.batch();
-      snapshot.docs.forEach((doc) => {
-        batch.delete(doc.ref);
-      });
-
-      return batch.commit().then(() => {
-        return snapshot.size;
-      });
-    }).then((numDeleted) => {
-      if (numDeleted === 0) {
-        resolve();
-        return;
-      }
-
-      // Recurse on the next process tick, to avoid
-      // exploding the stack.
-      process.nextTick(() => {
-        deleteQueryBatch(db, query, batchSize, resolve, reject);
-      });
-    })
-    .catch(reject);
-}
-
 //find top ten scores in collection HighScoresLeaderboard
 //returns the leaderboard(top ten scores) in a sorted array, so lowest score is last index of the array
 async function getTopTenHighScores() {
@@ -79,7 +47,7 @@ async function addToHighScores(score, displayName) {
   const collection = db.collection('HighScoresLeaderboard')
 
   const highScoresArray = await getTopTenHighScores()
-  if (score > highScoresArray.slice(-1)[0].Score && score > 1000) {
+  if (score > highScoresArray.slice(-1)[0].Score && score > 500) {
     collection.doc().set(newHighScore)
   }
 
@@ -90,12 +58,14 @@ async function addToHighScores(score, displayName) {
 async function addScore(email, newScore) {
   //find the user
   let userScore
+  let displayName
   let doc = db.collection('TestUsers').doc(email);
   let getDoc = await doc.get()
   .then(doc => {
     if (!doc.exists) {
       console.log('No such document!');
     } else {
+        displayName = doc.data().DisplayName
         userScore = [...doc.data().Scores]
     }
   })
@@ -109,6 +79,7 @@ async function addScore(email, newScore) {
     doc.update({
       Scores: updatedScore
   })
+  addToHighScores(newScore, displayName)
 }
 
 

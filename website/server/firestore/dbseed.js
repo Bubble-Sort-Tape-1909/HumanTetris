@@ -97,6 +97,7 @@ function addSeed() {
   })
 }
 
+// addScore('maxxxy@gmail.com', 1750)
 
 
 // getTopTenHighScores()

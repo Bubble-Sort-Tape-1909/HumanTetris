@@ -1,5 +1,7 @@
 import {firebaseApp} from '../../firebase/Firebase'
 import firebase from 'firebase/app'
+import {addUserByEmail} from '../../server/firestore/databaseFunctions'
+
 /**
  * ACTION TYPES
  */
@@ -102,6 +104,7 @@ export const loginUser = (method, email, password) => dispatch => {
         firebase.auth().currentUser.sendEmailVerification()
         const user = result.user
         dispatch(receiveLogin(user))
+        addUserByEmail(email = firebase.auth().currentUser.email)
       })
       .catch(error => {
         console.error(error)
@@ -115,6 +118,7 @@ export const loginUser = (method, email, password) => dispatch => {
         firebase.auth().currentUser.sendEmailVerification()
         const user = result.user
         dispatch(receiveLogin(user))
+        addUserByEmail(email = firebase.auth().currentUser.email)
       })
       .catch(error => {
         console.error(error)

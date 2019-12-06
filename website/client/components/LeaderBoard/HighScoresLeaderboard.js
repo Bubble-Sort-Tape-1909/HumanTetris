@@ -1,7 +1,7 @@
 import React from 'react'
 import {getTopTenHighScores} from '../../../server/firestore/databaseFunctions'
 import SingleScore from './SingleScore'
-import { Icon, Label, Menu, Table } from 'semantic-ui-react';
+import { Icon, Label, Menu, Table, Grid } from 'semantic-ui-react';
 import "./style.css"
 
  
@@ -15,7 +15,7 @@ export default class HighScoresLeaderBoard extends React.Component {
 
     async componentDidMount() {
         this.setState({
-            scores: await getTopTenHighScores()
+            scores: [{DisplayName: 'User', Score: 'Score'}, ...await getTopTenHighScores()]
         })
     }
 
@@ -26,11 +26,11 @@ export default class HighScoresLeaderBoard extends React.Component {
             console.log('state', this.state)
            return (
             <div>
-                <Table className="table">
-                    {this.state.scores.map(score => (
-                        <SingleScore displayName={score.DisplayName} score={score.Score}/>
+                <Grid columns="three">
+                    {this.state.scores.map((score, index) => (
+                        <SingleScore key={index} displayName={score.DisplayName} score={score.Score} place={index}/>
                     ))}
-                </Table>
+                </Grid>
             </div>
             
         ) 

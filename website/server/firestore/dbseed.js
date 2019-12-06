@@ -96,18 +96,3 @@ function addSeed() {
     addUser(user)
   })
 }
-
-// addScore('maxxxy@gmail.com', 1750)
-
-
-// getTopTenHighScores()
-// addToHighScores(800, 'Allion')
-
-
-// getUser()
-
-// addScore('milo@email.com', 1000000)
-
-getTopTenHighScores()
-
-// addSeed()

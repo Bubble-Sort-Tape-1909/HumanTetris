@@ -8,12 +8,10 @@ async function addUser(user) {
     let userDoesNotExist = false
   let collection = db.collection('TestUsers')
   await collection.where('Email', '==', `${user.Email}`).get().then((snapshot) => {
-      // console.log(snapshot.docs)
       if(snapshot.docs.length === 0){
           userDoesNotExist = true
       }
   })
-  console.log(userDoesNotExist)
   if (userDoesNotExist){
     collection
     .doc(`${user.Email}`)
@@ -21,6 +19,29 @@ async function addUser(user) {
     .then(console.log(`${user.Email} added to the database.`))
   }
 }
+
+//use for when adding by 3rd party (google/facebook)
+async function addUserByEmail(email) {
+  let userDoesNotExist = false
+  let collection = db.collection('TestUsers')
+  await collection.where('Email', '==', `${email}`).get().then((snapshot) => {
+      if(snapshot.docs.length === 0){
+          userDoesNotExist = true
+      }
+  })
+  const user = {
+    Email: email,
+    DisplayName: email,
+    Scores: []
+  }
+  if (userDoesNotExist){
+    collection
+    .doc(`${email}`)
+    .set(user)
+    .then(console.log(`${email} added to the database.`))
+  }
+}
+
 
 //find top ten scores in collection HighScoresLeaderboard
 //returns the leaderboard(top ten scores) in a sorted array, so lowest score is last index of the array
@@ -56,7 +77,6 @@ async function addToHighScores(score, displayName) {
 
 // method to add a game's score to the database
 async function addScore(email, newScore) {
-  //find the user
   let userScore
   let displayName
   let doc = db.collection('TestUsers').doc(email);
@@ -74,7 +94,6 @@ async function addScore(email, newScore) {
   })
 
  const updatedScore = [...userScore, newScore].sort(function(a, b){return a - b})
-//  updatedScore.sort()
  console.log('updatedscore', updatedScore)
     doc.update({
       Scores: updatedScore
@@ -83,4 +102,4 @@ async function addScore(email, newScore) {
 }
 
 
-module.exports = {addUser, getTopTenHighScores, addScore, addToHighScores}
+module.exports = {addUser, getTopTenHighScores, addScore, addToHighScores, addUserByEmail}

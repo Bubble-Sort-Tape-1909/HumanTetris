@@ -1,3 +1,30 @@
 .table {
-    padding: 70px !important
+  padding: 70px !important;
+}
+
+.globalLiderBoard {
+  text-align: center;
+  color: white;
+  font-size: 18pt;
+}
+
+.globalLiderBoardHeader {
+  text-align: center;
+  color: #ec7505;
+  font-family: 'Press Start 2P';
+  font-size: 22pt;
+}
+
+.loading {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  color: white;
+}
+
+.ranking {
+  text-align: center;
+  color: #069e2d;
+  font-family: 'Press Start 2P';
+  font-size: 24pt;
 }

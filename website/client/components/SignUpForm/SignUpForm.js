@@ -1,15 +1,8 @@
 import React from 'react'
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Icon
-} from 'semantic-ui-react'
+import {Button, Form, Grid, Header, Icon} from 'semantic-ui-react'
 import {Redirect} from 'react-router-dom'
 import {auth} from '../../../firebase/Firebase'
 import {addUser} from '../../../server/firestore/databaseFunctions'
-
 
 class SignUpForm extends React.Component {
   constructor() {
@@ -18,7 +11,7 @@ class SignUpForm extends React.Component {
       displayName: '',
       email: '',
       password: '',
-      redirect: false
+      redirected: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -33,7 +26,8 @@ class SignUpForm extends React.Component {
     if (
       this.state.displayName.length < 1 ||
       this.state.email.length < 7 ||
-      this.state.password.length < 5 || this.state.password.toLowerCase() === this.state.password
+      this.state.password.length < 5 ||
+      this.state.password.toLowerCase() === this.state.password
     ) {
       window.alert('PLEASE COMPLETE THE FORM')
     } else {
@@ -53,20 +47,22 @@ class SignUpForm extends React.Component {
         password: ''
       })
       //redirect to the game
-      this.state.redirected = true
+      this.setstate({
+        redirected: true
+      })
     }
   }
-  
+
   render() {
     if (this.state.redirected === true) {
-      return (<Redirect to="/singleplayer" />)
+      return <Redirect to="/singleplayer" />
     }
-    
+
     return (
       <Grid textAlign="center">
         <Grid.Column>
           <Header as="h3" color="red" textAlign="center">
-          <Icon color="green" name="sign-in" />
+            <Icon color="green" name="sign-in" />
             New Player Sign Up
           </Header>
           <Form size="large" onSubmit={() => this.handleSubmit(event)}>

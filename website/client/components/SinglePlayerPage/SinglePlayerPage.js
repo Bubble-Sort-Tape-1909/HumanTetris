@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
+import {Grid, Button} from 'semantic-ui-react'
 
 import {sendUserScore} from '../../store/userScore'
 
+import './style.css'
 
-export  class SinglePlayerPage extends Component {
+export class SinglePlayerPage extends Component {
   constructor() {
     super()
     this.state = {
@@ -52,19 +54,28 @@ export  class SinglePlayerPage extends Component {
   render() {
     return (
       <div id="Game">
-        <button id="startGame" type="submit" className="youGotIt">
-          Start Game
-        </button>
-
-        <h1>Your Final Score: </h1>
-        <h1 id="gameScore"> 0 </h1>
+        <Grid columns="three">
+          <Grid.Row>
+            <Grid.Column>
+              <Button id="startGame" type="submit" className="youGotIt">
+                Start Game
+              </Button>
+            </Grid.Column>
+            <Grid.Column>
+              <h1>YOUR FINAL SCORE: </h1>
+            </Grid.Column>
+            <Grid.Column>
+              <h1 id="gameScore"> 0 </h1>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </div>
     )
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  sendUserScore: (userScore) => dispatch(sendUserScore(userScore))
+const mapDispatchToProps = dispatch => ({
+  sendUserScore: userScore => dispatch(sendUserScore(userScore))
 })
 
-export default connect(null , mapDispatchToProps)(SinglePlayerPage)
+export default connect(null, mapDispatchToProps)(SinglePlayerPage)

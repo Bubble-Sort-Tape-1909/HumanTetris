@@ -13,6 +13,8 @@ import {
 } from 'semantic-ui-react'
 import {loginUser} from '../../store/auth'
 
+import './styles.css'
+
 class LoginPage extends React.Component {
   constructor() {
     super()
@@ -58,58 +60,73 @@ class LoginPage extends React.Component {
           style={{height: '100vh'}}
           verticalAlign="middle"
         >
-          <Grid.Column style={{maxWidth: 450}}>
-            <Header as="h2" color="teal" textAlign="center">
-              <Image src="/logo.png" /> Log-in to your account
-            </Header>
-            <Form size="large" error>
-              <Segment stacked>
-                {/* If there's a login errror, display an alert to the user */}
-                {loginError && (
-                  <Message
-                    error
-                    header="Error"
-                    content="Incorrect email or password"
+          <Grid.Row>
+            <Image
+              src="Tetris.png"
+              className="customLogoImg"
+              alt="Custom Tetris Logo"
+            />
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column style={{maxWidth: 500}}>
+              <Header as="h2" color="teal" textAlign="center">
+                <h1 className="loginHeader">Log-in to your account</h1>
+              </Header>
+              <Form size="large" error>
+                <Segment stacked>
+                  {/* If there's a login errror, display an alert to the user */}
+                  {loginError && (
+                    <Message
+                      error
+                      header="Error"
+                      content="Incorrect email or password"
+                    />
+                  )}
+                  <Form.Input
+                    fluid
+                    icon="mail"
+                    iconPosition="left"
+                    placeholder="E-mail address"
+                    name="email"
+                    onChange={this.handleEmailChange}
+                    value={this.state.email}
                   />
-                )}
-                <Form.Input
-                  fluid
-                  icon="mail"
-                  iconPosition="left"
-                  placeholder="E-mail address"
-                  name="email"
-                  onChange={this.handleEmailChange}
-                  value={this.state.email}
-                />
-                <Form.Input
-                  fluid
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
-                  type="password"
-                  name="password"
-                  onChange={this.handlePasswordChange}
-                  value={this.state.password}
-                />
-                <Button positive fluid size="large" onClick={this.handleSubmit}>
-                  Login
+                  <Form.Input
+                    fluid
+                    icon="lock"
+                    iconPosition="left"
+                    placeholder="Password"
+                    type="password"
+                    name="password"
+                    onChange={this.handlePasswordChange}
+                    value={this.state.password}
+                  />
+                  <Button
+                    positive
+                    fluid
+                    size="large"
+                    onClick={this.handleSubmit}
+                  >
+                    Login
+                  </Button>
+                </Segment>
+              </Form>
+              <Message>
+                <h4>Or Login With</h4>
+                <Button color="google plus" onClick={this.handleGoogleSubmit}>
+                  <Icon name="google" /> Google
                 </Button>
-              </Segment>
-            </Form>
-            <Message>
-              <h4>Or Login With</h4>
-              <Button color="google plus" onClick={this.handleGoogleSubmit}>
-                <Icon name="google" /> Google
-              </Button>
-              <Button color="facebook">
-                <Icon name="facebook" onClick={this.handleFacebookSubmit} />
-                Facebook
-              </Button>
-            </Message>
-            <Message>
-              New to us? <a href="/signup">Sign Up</a>
-            </Message>
-          </Grid.Column>
+                <Button color="facebook">
+                  <Icon name="facebook" onClick={this.handleFacebookSubmit} />
+                  Facebook
+                </Button>
+              </Message>
+              <Message>
+                New to us? <a href="/signup">Sign Up</a>
+              </Message>
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
       )
     }

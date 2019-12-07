@@ -1,3 +1,6 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-undef */
 // import store from '../client/index'
@@ -405,7 +408,21 @@ const runGame = () => {
 
     // Checking if all 13 pointd are withing windowshape
     if (gameCounter === 7) {
+      for (let pointName in keyPointsToCollide) {
+        hit = {
+          ...hit,
+          [pointName]: collideCirclePoly(
+            keyPointsToCollide[pointName].x,
+            keyPointsToCollide[pointName].y,
+            10,
+            poly,
+            true
+          )
+        }
+      }
+
       isClear = clear(hit)
+
       if (isClear) {
         score()
       } else {
@@ -560,6 +577,7 @@ function draw() {
   } else {
     startGame = false
     gameStarted = false
+    song.stop()
   }
 
   song.setVolume(slider.value())
@@ -574,32 +592,32 @@ function draw() {
       drawShape()
     }
 
-    for (let pointName in keyPointsToCollide) {
-      ellipse(
-        keyPointsToCollide[pointName].x,
-        keyPointsToCollide[pointName].y,
-        20,
-        20
-      )
+    // for (let pointName in keyPointsToCollide) {
+    //   ellipse(
+    //     keyPointsToCollide[pointName].x,
+    //     keyPointsToCollide[pointName].y,
+    //     20,
+    //     20
+    //   )
 
-      hit = {
-        ...hit,
-        [pointName]: collideCirclePoly(
-          keyPointsToCollide[pointName].x,
-          keyPointsToCollide[pointName].y,
-          10,
-          poly,
-          true
-        )
-      }
-    }
+    //   hit = {
+    //     ...hit,
+    //     [pointName]: collideCirclePoly(
+    //       keyPointsToCollide[pointName].x,
+    //       keyPointsToCollide[pointName].y,
+    //       10,
+    //       poly,
+    //       true
+    //     )
+    //   }
+    // }
 
     translate(width, 0) // move to far corner
     scale(-1.0, 1.0)
     drawWords()
   } else {
     strokeWeight(0)
-    fill('white')
+    fill('#292B2F')
     rect(0, 0, 1920, 1080)
   }
 }

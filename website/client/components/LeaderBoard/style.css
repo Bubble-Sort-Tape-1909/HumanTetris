@@ -1,3 +1,14 @@
 .table {
-    padding: 70px !important
+  padding: 70px !important;
+}
+
+.globalLiderBoard {
+  color: white;
+  font-size: 14pt;
+}
+
+.globalLiderBoardHeader {
+  color: white;
+  font-family: 'Press Start 2P';
+  font-size: 14pt;
 }

@@ -9,9 +9,9 @@ const Navbar = props => {
   return (
     <div>
       <nav>
-        <Menu stackable borderless>
-          <Menu.Item as={Link} to="/">
-            <Image src="/logo.png" size="mini" />
+        <Menu stackable borderless inverted>
+          <Menu.Item as={Link} to="/singleplayer">
+            <Image src="/HTNavBar.png" size="mini" />
           </Menu.Item>
           <Menu.Item name="Play">
             <Icon color="green" name="gamepad" />

@@ -23,11 +23,12 @@ export default class HighScoresLeaderBoard extends React.Component {
 
   render() {
     if (this.state.scores.length === 0) {
-      return <div>Loading Scores</div>
+      return <div className="loading">Loading Scores</div>
     } else {
       return (
         <div>
-          <Grid columns="three" className="globalLiderBoard">
+          <p className="ranking">GLOBAL SCORE RANKING</p>
+          <Grid columns="three">
             {this.state.scores.map((score, index) => (
               <SingleScore
                 key={index}

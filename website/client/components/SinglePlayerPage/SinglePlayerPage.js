@@ -62,7 +62,7 @@ export class SinglePlayerPage extends Component {
               </Button>
             </Grid.Column>
             <Grid.Column>
-              <h1>Your Final Score: </h1>
+              <h1>YOUR FINAL SCORE: </h1>
             </Grid.Column>
             <Grid.Column>
               <h1 id="gameScore"> 0 </h1>

@@ -1,7 +1,6 @@
 const db = require('../../firebase/Firebase').db
 
-//add user to the db, will need to add this to signup thunk
-// #### need to do a check for if username already exists, and deny if so
+//add user via email/signup
 async function addUser(user) {
   let userDoesNotExist = false
   let collection = db.collection('TestUsers')
@@ -21,7 +20,7 @@ async function addUser(user) {
   }
 }
 
-//use for when adding by 3rd party (google/facebook)
+//add user via 3rd party (google/facebook)
 async function addUserByEmail(email) {
   let userDoesNotExist = false
   let collection = db.collection('TestUsers')
@@ -100,7 +99,6 @@ async function addScore(email, newScore) {
   const updatedScore = [...userScore, newScore].sort(function(a, b) {
     return a - b
   })
-  console.log('updatedscore', updatedScore)
   doc.update({
     Scores: updatedScore
   })

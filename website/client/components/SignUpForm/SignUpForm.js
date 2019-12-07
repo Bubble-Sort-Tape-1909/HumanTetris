@@ -1,15 +1,8 @@
 import React from 'react'
-import {
-  Button,
-  Form,
-  Grid,
-  Header,
-  Icon
-} from 'semantic-ui-react'
+import {Button, Form, Grid, Header, Icon} from 'semantic-ui-react'
 import {Redirect} from 'react-router-dom'
 import {auth} from '../../../firebase/Firebase'
 import {addUser} from '../../../server/firestore/databaseFunctions'
-
 
 class SignUpForm extends React.Component {
   constructor() {
@@ -17,7 +10,8 @@ class SignUpForm extends React.Component {
     this.state = {
       displayName: '',
       email: '',
-      password: ''
+      password: '',
+      redirected: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -32,17 +26,19 @@ class SignUpForm extends React.Component {
     if (
       this.state.displayName.length < 1 ||
       this.state.email.length < 7 ||
-      this.state.password.length < 5 || this.state.password.toLowerCase() === this.state.password
+      this.state.password.length < 5 ||
+      this.state.password.toLowerCase() === this.state.password
     ) {
       window.alert('PLEASE COMPLETE THE FORM')
     } else {
-      //signs user up and sends to firestore
+      //signs user up and sends to firestore auth
       auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
       const user = {
         Email: this.state.email,
         DisplayName: this.state.displayName,
         Scores: []
       }
+      // send to firestore db
       addUser(user)
 
       this.setState({
@@ -50,21 +46,23 @@ class SignUpForm extends React.Component {
         email: '',
         password: ''
       })
-      //redirect to some page after wiping state and adding to firestore db
-      return (<Redirect to="/" />)
+      //redirect to the game
+      this.setstate({
+        redirected: true
+      })
     }
   }
 
   render() {
-    if (auth.currentUser) {
-      console.log(auth.currentUser)
+    if (this.state.redirected === true) {
+      return <Redirect to="/singleplayer" />
     }
-    
+
     return (
       <Grid textAlign="center">
         <Grid.Column>
           <Header as="h3" color="red" textAlign="center">
-          <Icon color="green" name="sign-in" />
+            <Icon color="green" name="sign-in" />
             New Player Sign Up
           </Header>
           <Form size="large" onSubmit={() => this.handleSubmit(event)}>

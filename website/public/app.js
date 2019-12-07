@@ -428,7 +428,7 @@ const runGame = () => {
         startGame = false
         gameStarted = false
         gameOver = true
-        song.stop()
+        // song.stop()
 
         playersScore = 0
 
@@ -449,11 +449,11 @@ function modelReady() {
   }
 }
 
-let song
+// let song
 
-function preload() {
-  song = loadSound('Boney M. - Rasputin.mp3')
-}
+// function preload() {
+//   song = loadSound('Boney M. - Rasputin.mp3')
+// }
 
 //Getting acsess to camera
 function setup() {
@@ -561,17 +561,16 @@ function draw() {
       if (!gameStarted) {
         runGame()
         gameStarted = true
-
-        song.play()
+        // song.play()
       }
     })
   } else {
     startGame = false
     gameStarted = false
-    song.stop()
+    // song.stop()
   }
 
-  song.setVolume(slider.value())
+  // song.setVolume(slider.value())
 
   if (startGame) {
     //where to show the image of video

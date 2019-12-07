@@ -52,7 +52,7 @@ class LoginPage extends React.Component {
   render() {
     const {loginError, isAuthenticated} = this.props
     if (isAuthenticated) {
-      return <Redirect to="/" />
+      return <Redirect to="/singleplayer" />
     } else {
       return (
         <Grid

@@ -10,7 +10,7 @@ const Navbar = props => {
     <div>
       <nav>
         <Menu stackable borderless inverted>
-          <Menu.Item as={Link} to="/">
+          <Menu.Item as={Link} to="/singleplayer">
             <Image src="/HTNavBar.png" size="mini" />
           </Menu.Item>
           <Menu.Item name="Play">

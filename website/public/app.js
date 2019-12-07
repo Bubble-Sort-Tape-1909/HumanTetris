@@ -3,9 +3,6 @@
 /* eslint-disable complexity */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-undef */
-// import store from '../client/index'
-// import { sendUserScore } from '../client/store/userScore'
-
 let video
 let poseNet
 let poses = []
@@ -426,12 +423,6 @@ const runGame = () => {
       if (isClear) {
         score()
       } else {
-        // let gameDiv = document.getElementById("Game");
-
-        // let scoreToRender = document.createElement("h1")
-        // scoreToRender.innerHTML = playersScore;
-        // gameDiv.appendChild(scoreToRender);
-
         document.getElementById('gameScore').innerText = String(playersScore)
 
         startGame = false
@@ -591,26 +582,6 @@ function draw() {
     if (1 < gameCounter && gameCounter < 8) {
       drawShape()
     }
-
-    // for (let pointName in keyPointsToCollide) {
-    //   ellipse(
-    //     keyPointsToCollide[pointName].x,
-    //     keyPointsToCollide[pointName].y,
-    //     20,
-    //     20
-    //   )
-
-    //   hit = {
-    //     ...hit,
-    //     [pointName]: collideCirclePoly(
-    //       keyPointsToCollide[pointName].x,
-    //       keyPointsToCollide[pointName].y,
-    //       10,
-    //       poly,
-    //       true
-    //     )
-    //   }
-    // }
 
     translate(width, 0) // move to far corner
     scale(-1.0, 1.0)

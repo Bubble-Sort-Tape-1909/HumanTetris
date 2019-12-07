@@ -1,7 +1,7 @@
 import React from 'react'
 import {getTopTenHighScores} from '../../../server/firestore/databaseFunctions'
 import SingleScore from './SingleScore'
-import { Icon, Label, Menu, Table, Grid } from 'semantic-ui-react';
+import { Icon, Grid } from 'semantic-ui-react';
 import "./style.css"
 
  
@@ -23,7 +23,6 @@ export default class HighScoresLeaderBoard extends React.Component {
         if (this.state.scores.length === 0) {
             return (<div>Loading Scores</div>)
         } else {
-            console.log('state', this.state)
            return (
             <div>
                 <Grid columns="three">

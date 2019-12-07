@@ -37,13 +37,14 @@ class SignUpForm extends React.Component {
     ) {
       window.alert('PLEASE COMPLETE THE FORM')
     } else {
-      //signs user up and sends to firestore
+      //signs user up and sends to firestore auth
       auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
       const user = {
         Email: this.state.email,
         DisplayName: this.state.displayName,
         Scores: []
       }
+      // send to firestore db
       addUser(user)
 
       this.setState({
@@ -51,15 +52,13 @@ class SignUpForm extends React.Component {
         email: '',
         password: ''
       })
-      //redirect to some page after wiping state and adding to firestore db
+      //redirect to the game
       this.state.redirected = true
-      return (<Redirect to="/" />)
     }
   }
   
   render() {
     if (this.state.redirected === true) {
-      console.log('redirect me')
       return (<Redirect to="/singleplayer" />)
     }
     

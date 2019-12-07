@@ -1,11 +1,8 @@
 const db = require('../../firebase/Firebase').db
 
-//add user to the db, will need to add this to signup thunk
-// #### need to do a check for if username already exists, and deny if so
+//add user via email/signup
 async function addUser(user) {
-    // console.log(user.Email)
-    console.log('>>>>>>>>>>>>>>>>>>>>>>1')
-    let userDoesNotExist = false
+  let userDoesNotExist = false
   let collection = db.collection('TestUsers')
   await collection.where('Email', '==', `${user.Email}`).get().then((snapshot) => {
       if(snapshot.docs.length === 0){
@@ -20,7 +17,7 @@ async function addUser(user) {
   }
 }
 
-//use for when adding by 3rd party (google/facebook)
+//add user via 3rd party (google/facebook)
 async function addUserByEmail(email) {
   let userDoesNotExist = false
   let collection = db.collection('TestUsers')
@@ -50,15 +47,13 @@ async function getTopTenHighScores() {
   let query = await db.collection('HighScoresLeaderboard').orderBy('Score', 'desc').limit(10).get().then((snapshot) => {
     snapshot.docs.forEach(doc => {
       highscoresArray.push(doc.data())
-      // console.log(doc.data())
     })
   })
-  console.log(highscoresArray)
   return highscoresArray
 }
 
 
-//we need to check if it's in the top ten highest scores in collection HighScoresLeaderboard
+//check if score is in the top ten highest scores in collection HighScoresLeaderboard
 //if it is, delete the 10th score and insert it into the collection
 async function addToHighScores(score, displayName) {
   const newHighScore = {
@@ -94,7 +89,6 @@ async function addScore(email, newScore) {
   })
 
  const updatedScore = [...userScore, newScore].sort(function(a, b){return a - b})
- console.log('updatedscore', updatedScore)
     doc.update({
       Scores: updatedScore
   })

@@ -17,7 +17,8 @@ class SignUpForm extends React.Component {
     this.state = {
       displayName: '',
       email: '',
-      password: ''
+      password: '',
+      redirect: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -51,13 +52,15 @@ class SignUpForm extends React.Component {
         password: ''
       })
       //redirect to some page after wiping state and adding to firestore db
+      this.state.redirected = true
       return (<Redirect to="/" />)
     }
   }
-
+  
   render() {
-    if (auth.currentUser) {
-      console.log(auth.currentUser)
+    if (this.state.redirected === true) {
+      console.log('redirect me')
+      return (<Redirect to="/singleplayer" />)
     }
     
     return (

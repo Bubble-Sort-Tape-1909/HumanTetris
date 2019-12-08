@@ -9,7 +9,8 @@ import {
   UserHome,
   SinglePlayerPage,
   SignUpForm,
-  HighScoresLeaderBoard
+  GlobalLeaderboardPage,
+  LocalLeaderboardPage
 } from './components/index'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -50,8 +51,9 @@ class Routes extends Component {
           <Route path="/signup" component={SignUpForm} />
           <Route
             path="/leaderboards/global"
-            component={HighScoresLeaderBoard}
+            component={GlobalLeaderboardPage}
           />
+          <Route path="/leaderboards/local" component={LocalLeaderboardPage} />
         </Switch>
       </div>
     )

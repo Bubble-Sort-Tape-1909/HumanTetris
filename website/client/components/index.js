@@ -11,4 +11,9 @@ export {default as UserHome} from './UserHome/UserHome'
 export {default as LandingPage} from './LandingPage/LandingPage'
 export {default as SinglePlayerPage} from './SinglePlayerPage/SinglePlayerPage'
 export {default as SignUpForm} from './SignUpForm/SignUpForm'
-export {default as HighScoresLeaderBoard} from './LeaderBoard/HighScoresLeaderboard'
+export {
+  default as GlobalLeaderboardPage
+} from './Leaderboard/GlobalLeaderboardPage/GlobalLeaderboardPage'
+export {
+  default as LocalLeaderboardPage
+} from './Leaderboard/LocalLeaderboardPage/LocalScoreLeaderboard'

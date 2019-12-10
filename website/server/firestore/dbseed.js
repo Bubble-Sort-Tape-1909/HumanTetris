@@ -49,7 +49,7 @@ const users = [
 ]
 
 const highScores = [
-  {
+    {
     DisplayName: "JohnnyTwoBits",
     Score: 1525
   },
@@ -91,8 +91,19 @@ const highScores = [
   }
 ]
 
-function addSeed() {
-  users.forEach(user => {
-    addUser(user)
-  })
+
+
+HighScores = {
+  'maksim.pesetski@gmail.com' : 
+    {
+    UserName: 'MaksimP',
+    Score: '5880'
+    },
+  'Twoboots@email.com' : 
+  {
+    UserName: 'TwoBoots',
+    Score: 5300
+  },
+
+
 }

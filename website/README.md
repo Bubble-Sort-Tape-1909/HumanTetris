@@ -1,1 +1,1 @@
-![TESTING IMG](website/public/favicon.ico)
+![TESTING IMG](./public/favicon.ico)

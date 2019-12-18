@@ -1,6 +1,6 @@
 const db = require('../../firebase/Firebase').db
 
-//add user via email/signup
+// add user via email/signup
 async function addUser(user) {
   let userDoesNotExist = false
   let collection = db.collection('TestUsers')
@@ -20,7 +20,7 @@ async function addUser(user) {
   }
 }
 
-//add user via 3rd party (google/facebook)
+// add user via 3rd party (google/facebook)
 async function addUserByEmail(email) {
   let userDoesNotExist = false
   let collection = db.collection('TestUsers')
@@ -45,11 +45,11 @@ async function addUserByEmail(email) {
   }
 }
 
-//find top ten scores in collection HighScoresLeaderboard
-//returns the leaderboard(top ten scores) in a sorted array, so lowest score is last index of the array
+// find top ten scores in collection HighScoresLeaderboard -- helper function
+// returns the leaderboard(top ten scores) in a sorted array, so lowest score is last index of the array
 async function getTopTenHighScores() {
   let highscoresArray = []
-  let query = await db
+  await db
     .collection('HighScoresLeaderboard')
     .orderBy('Score', 'desc')
     .limit(10)
@@ -62,8 +62,9 @@ async function getTopTenHighScores() {
   return highscoresArray
 }
 
-//we need to check if it's in the top ten highest scores in collection HighScoresLeaderboard
-//if it is, delete the 10th score and insert it into the collection
+
+// we need to check if it's in the top ten highest scores in collection HighScoresLeaderboard
+// if it is, delete the 10th (lowest) score and insert new score into the collection, then save to db
 async function addToHighScores(score, displayName) {
   const newHighScore = {
     DisplayName: displayName,
@@ -82,7 +83,7 @@ async function addScore(email, newScore) {
   let userScore
   let displayName
   let doc = db.collection('TestUsers').doc(email)
-  let getDoc = await doc
+  await doc
     .get()
     .then(doc => {
       if (!doc.exists) {
@@ -109,6 +110,6 @@ module.exports = {
   addUser,
   getTopTenHighScores,
   addScore,
-  addToHighScores,
   addUserByEmail
 }
+

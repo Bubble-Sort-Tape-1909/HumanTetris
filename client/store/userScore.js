@@ -21,6 +21,8 @@ const initialState = {
 }
 
 // Thunks:
+
+// Send user's score to firestore db
 export const sendUserScore = userScore => {
   return dispatch => {
     let userEmail = firebase.auth().currentUser.email

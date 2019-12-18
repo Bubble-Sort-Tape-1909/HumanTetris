@@ -14,18 +14,19 @@ let playersScore = 0
 
 let gameOver = false
 
-// body/window scale
+// bodyscale constantly updates with the distance between players left hip and left knee
 let bodyScale
+//TempScale is the bodyscale at a particular point in time
 let tempScale
 
-//random starting point which is used to draw window shapes
+//starting point which are used to draw window shapes
 let tempLeftAnkleY
 let startingX
 
-// initialize draw
+// initialize draw (based off of which)
 let startGame = false
 
-//Initialize start key point x & y:
+//Initialize PoseNet key points' x & y:
 let keyPointsToCollide = {
   nose: {x: 0, y: 0},
   leftEye: {x: 0, y: 0},
@@ -53,10 +54,12 @@ let poly = []
 let isClear = false
 
 let gameCounter = 0
-let isClearGlobal = false
+// Can we remove this??
+// let isClearGlobal = false
 
-// getting random window shape
+// Defines the shape in use each round
 let currentWindowShape
+// list of all the shapes
 let windowShapesName = [
   'split',
   'tShape',
@@ -67,7 +70,7 @@ let windowShapesName = [
   'breakDancer'
 ]
 
-// create starting point for the particular shape
+// Defines the min and max starting points to keep the shapes in frame
 let minMaxX
 function startingPoint(name, ts) {
   if (name === 'jumpingJack') {
@@ -106,7 +109,7 @@ function startingPoint(name, ts) {
       minX: 1.5 * ts
     }
 }
-
+// Selects a random shape from the windosShapesName array
 let getRandomWindowShapeName = windowShapesName => {
   let randomIndex = Math.floor(Math.random() * windowShapesName.length)
   return windowShapesName[randomIndex]
@@ -314,7 +317,7 @@ let windowShapeConstructor = (startingX, tempLeftAnkleY, tempScale, name) => {
   }
 }
 
-// Test collision
+// Collision test
 let hit = {
   nose: false,
   leftShoulder: false,
@@ -331,7 +334,7 @@ let hit = {
   rightAnkle: false
 }
 
-// check if all 13 points are within the windowshape
+// check if all 13 points are within the shape
 let clear = points => {
   for (let point in points) {
     if (!points[point]) return false
@@ -339,13 +342,15 @@ let clear = points => {
   return true
 }
 
+// This defines the starting point of the shape, and if the shape is going to end up off screen it starts at a default location
 function setRandomPin(maxX, minX = 0) {
   let startingX = minX + Math.floor(Math.random() * (1920 - maxX - minX))
   if (startingX + maxX <= 1920 && startingX - minX >= 0) {
     return startingX
-  } else return 640
+  } else return 960
 }
 
+// once the player completes a level, it grants points based off the shape's difficulty
 score = () => {
   if (selectedWindowName === 'tShape') {
     playersScore += 100
@@ -364,6 +369,7 @@ score = () => {
   }
 }
 
+// This is our game loop
 const runGame = () => {
   let firstLoop = true
 
@@ -448,8 +454,6 @@ function modelReady() {
     select('#status').html('Model Loaded')
   }
 }
-
-// let song
 
 // function preload() {
 //   song = loadSound('Boney M. - Rasputin.mp3')
@@ -536,12 +540,12 @@ const drawWords = () => {
       textSize(100)
       fill('white')
       text('READY', 800, 520)
-    } else if ((gameCounter === 13) | (gameCounter === -2)) {
+    } else if (gameCounter === 13 || gameCounter === -2) {
       strokeWeight(3)
       textSize(100)
       fill('white')
       text('SET', 800, 520)
-    } else if ((gameCounter === 14) | (gameCounter === -1)) {
+    } else if (gameCounter === 14 || gameCounter === -1) {
       strokeWeight(3)
       textSize(100)
       fill('white')

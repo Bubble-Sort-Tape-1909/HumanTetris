@@ -95,15 +95,20 @@ const highScores = [
 
 HighScores = {
   'maksim.pesetski@gmail.com' : 
-    {
+  {
     UserName: 'MaksimP',
     Score: '5880'
-    },
+  },
   'Twoboots@email.com' : 
   {
     UserName: 'TwoBoots',
     Score: 5300
   },
+  'Geronimo@aol.com' : 
+  {
+    UserName: 'Geronimo',
+    Score: 3500
+  }
 
 
 }

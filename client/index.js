@@ -6,9 +6,6 @@ import App from './app'
 import history from './history'
 import configureStore from './store/configureStore'
 
-// establishes socket connection
-import './socket'
-
 const store = configureStore()
 
 ReactDOM.render(

@@ -8,7 +8,6 @@ let poseNet
 let poses = []
 let selectedWindowName
 let gameStarted = false
-let slider
 
 let playersScore = 0
 
@@ -434,7 +433,6 @@ const runGame = () => {
         startGame = false
         gameStarted = false
         gameOver = true
-        // song.stop()
 
         playersScore = 0
 
@@ -455,10 +453,6 @@ function modelReady() {
   }
 }
 
-// function preload() {
-//   song = loadSound('Boney M. - Rasputin.mp3')
-// }
-
 //Getting acsess to camera
 function setup() {
   //video screen resolution
@@ -473,8 +467,6 @@ function setup() {
   poseNet.on('pose', gotPoses)
   // Hide the video element, and just show the canvas
   video.hide()
-
-  slider = createSlider(0, 1, 0.5, 0.01)
 }
 
 function gotPoses(results) {
@@ -565,16 +557,12 @@ function draw() {
       if (!gameStarted) {
         runGame()
         gameStarted = true
-        // song.play()
       }
     })
   } else {
     startGame = false
     gameStarted = false
-    // song.stop()
   }
-
-  // song.setVolume(slider.value())
 
   if (startGame) {
     //where to show the image of video

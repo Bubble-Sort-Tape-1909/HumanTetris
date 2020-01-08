@@ -62,7 +62,6 @@ async function getTopTenHighScores() {
   return highscoresArray
 }
 
-
 // we need to check if it's in the top ten highest scores in collection HighScoresLeaderboard
 // if it is, delete the 10th (lowest) score and insert new score into the collection, then save to db
 async function addToHighScores(score, displayName) {
@@ -73,7 +72,7 @@ async function addToHighScores(score, displayName) {
   const collection = db.collection('HighScoresLeaderboard')
 
   const highScoresArray = await getTopTenHighScores()
-  if (score > highScoresArray.slice(-1)[0].Score && score > 500) {
+  if (score > highScoresArray.slice(-1)[0].Score) {
     collection.doc().set(newHighScore)
   }
 }
@@ -112,4 +111,3 @@ module.exports = {
   addScore,
   addUserByEmail
 }
-

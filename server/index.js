@@ -1,3 +1,4 @@
+// Despite we don't use Express server we use it for local testing;
 const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
@@ -5,10 +6,7 @@ const compression = require('compression')
 
 const PORT = process.env.PORT || 8080
 const app = express()
-const socketio = require('socket.io')
 module.exports = app
-
-
 
 /**
  * In your development environment, you can keep all of your
@@ -20,8 +18,6 @@ module.exports = app
  */
 if (process.env.NODE_ENV !== 'production') require('../secrets')
 
-
-
 const createApp = () => {
   // logging middleware
   app.use(morgan('dev'))
@@ -32,8 +28,6 @@ const createApp = () => {
 
   // compression middleware
   app.use(compression())
-
-
 
   // static file-serving middleware
   app.use(express.static(path.join(__dirname, '..', 'public')))
@@ -63,16 +57,9 @@ const createApp = () => {
 }
 
 const startListening = () => {
-  // start listening (and create a 'server' object representing our server)
-  const server = app.listen(PORT, () =>
-    console.log(`Mixing it up on port ${PORT}`)
-  )
-
-  // set up our socket control center
-  const io = socketio(server)
-  require('./socket')(io)
+  // start listening
+  app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`))
 }
-
 
 async function bootApp() {
   await createApp()

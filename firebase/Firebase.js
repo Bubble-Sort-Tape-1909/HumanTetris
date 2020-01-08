@@ -11,11 +11,9 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID
 }
 
-
 // Initialize Firebase
 const firebaseApp = firebase.initializeApp(firebaseConfig)
-const baseDb = firebaseApp.firestore()
-const db = baseDb
+const db = firebaseApp.firestore()
 const auth = firebase.auth()
 
- module.exports = {firebaseConfig, firebaseApp, db, auth}
+module.exports = {firebaseConfig, firebaseApp, db, auth}

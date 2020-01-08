@@ -2,10 +2,10 @@
 
 ## By Milo Calvo-Platero, Sam Miller, Maksim Pesetski and Danny Gutmann
 
-### [Human Tetris](https://humantetris.firebaseapp.com/) is a web game based on the Japanese game show called [Brain Wall](https://www.youtube.com/watch?v=vfCcq116WgE) that users can play on a website. The player sees their body on the monitor using a webcam, where the objective is to try and fit their body into a “safe zone” before an eight-second timer ends. If the player is able to fit their whole body inside, they move onto the next level with a differently shaped “safe zone”. If they fail to do this, the game ends and their score is recorded to a database. The player's bodies are tracked via PoseNet, the safe zones are rendered to the screen by p5.js, and to check if the player's body is fully in the safe zone we use p5.collide2D. We used Firebase for storing and retrieving information, authentication, and game score. 
+### [Human Tetris](https://humantetris.firebaseapp.com/) is a web game based on the Japanese game show called [Brain Wall](https://www.youtube.com/watch?v=vfCcq116WgE){:target="_blank"} that users can play on a website. The player sees their body on the monitor using a webcam, where the objective is to try and fit their body into a “safe zone” before an eight-second timer ends. If the player is able to fit their whole body inside, they move onto the next level with a differently shaped “safe zone”. If they fail to do this, the game ends and their score is recorded to a database. The player's bodies are tracked via PoseNet, the safe zones are rendered to the screen by p5.js, and to check if the player's body is fully in the safe zone we use p5.collide2D. We used Firebase for storing and retrieving information, authentication, and game score. 
 
 # Technologies
-  We had to find ways to integrate various technologies in order to get our game fully functional. Each one provided a specific part of the game and all together they allowed us to transform [Brain Wall](https://www.youtube.com/watch?v=vfCcq116WgE) into web form!
+  We had to find ways to integrate various technologies in order to get our game fully functional. Each one provided a specific part of the game and all together they allowed us to transform [Brain Wall](https://www.youtube.com/watch?v=vfCcq116WgE){:target="_blank"} into web form!
 
 ## PoseNet
   [PoseNet](https://github.com/google-coral/project-posenet) is a javascript library that was built on top of ML5 in order to constantly improve the accuracy of the technology. It tracks 17 key points across people's bodies.
